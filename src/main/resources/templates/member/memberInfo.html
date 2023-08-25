@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" xmlns="http://www.w3.org/1999/xhtml"
+      layout:decorate="~{layout/basic.html}">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<div layout:fragment="content">
+    <div class="t_head">
+        <h1>[[${Member.nickname}]]</h1>
+    </div>
+    <div class="t_body">
+        <form>
+            <input type="text" th:value="${Member.nickname}" readonly>
+            <input type="text" th:value="${Member.email}" readonly>
+            <input type="text" th:value="${Member.password}" readonly>
+            <input type="text" th:value="${Member.memberID}" readonly>
+        </form>
+    </div>
+</div>
+
+</body>
+</html>

@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
+      layout:decorate="~{layout/basic.html}">
+<link href="/assets/dist/css/bootstrap.min.css" rel="stylesheet">
+
+<style>
+    .bd-placeholder-img {
+        font-size: 1.125rem;
+        text-anchor: middle;
+        -webkit-user-select: none;
+        -moz-user-select: none;
+        user-select: none;
+    }
+
+    @media (min-width: 768px) {
+        .bd-placeholder-img-lg {
+            font-size: 3.5rem;
+        }
+    }
+
+    .nav-scroller .nav {
+        display: flex;
+        flex-wrap: nowrap;
+        padding-bottom: 1rem;
+        margin-top: -1px;
+        overflow-x: auto;
+        text-align: center;
+        white-space: nowrap;
+        -webkit-overflow-scrolling: touch;
+    }
+</style>
+
+
+<!-- Custom styles for this template -->
+<link href="/css/carousel.css" rel="stylesheet">
+<div layout:fragment="content">
+    <hr class="featurette-divider">
+    <div class="container marketing">
+    <div class="row featurette">
+        <div class="col-md-6 order-md-2">
+            <h2 class="featurette-heading lh-0 my-5"><span class="text-body-secondary">Hello! This is Gallery</span> [[${galleryDTO.title}]] </h2>
+            <h3 class="featurette-heading lh-0 my-5"><span class="text-body-secondary">Manager: </span>[[${galleryDTO.manager}]] </h3>
+            <p class="lead">[[${galleryDTO.explanation}]]</p>
+        </div>
+        <div class="col-md-5 order-md-1">
+            <svg th:if="${galleryDTO.galleryImageName == null}"class="bd-placeholder-img bd-placeholder-img-lg featurette-image img-fluid mx-auto" width="300" height="300" xmlns="http://www.w3.org/2000/svg" role="img"
+                 aria-label="Placeholder: 500x500" preserveAspectRatio="xMidYMid slice" focusable="false"><title>Placeholder</title><rect width="100%" height="100%" fill="var(--bs-secondary-bg)"/><text x="50%" y="50%" fill="var(--bs-secondary-color)" dy=".3em">500x500</text></svg>
+            <img th:if="${galleryDTO.galleryImageName != null}"class="bd-placeholder-img bd-placeholder-img-lg featurette-image img-fluid mx-auto" width="300" height="300" xmlns="http://www.w3.org/2000/svg" role="img"
+                 aria-label="Placeholder: 500x500" th:src="|/view/${galleryDTO.galleryImageName}|" preserveAspectRatio="xMidYMid slice" focusable="false"><title>Placeholder</title><rect width="100%" height="100%" fill="var(--bs-secondary-bg)"/></img>
+        </div>
+    </div>
+    </div>
+    <hr class="featurette-divider">
+    <div class="row mt-3" th:insert="~{/fragment/boardListFragment::boardList(${galleryDTO.galleryID}, ${responseDTO})}">
+
+    </div>
+    <div class ="modal" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Modal title</h5>
+                    <button type="button" class="btn-close"
+                            data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class ="modal-body">
+                    <p>Modal body text goes here.</p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-primary">Save Changes</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script layout:fragment="script" th:inline="javascript">
+    const result = [[${result}]]
+    const modal = new bootstrap.Modal(document.querySelector(".modal"))
+    if(result)
+    {
+        modal.show()
+    }
+</script>

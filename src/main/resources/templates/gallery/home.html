@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
+      layout:decorate="~{layout/basic2.html}">
+
+<div layout:fragment="content">
+    <section class="py-5 text-center container">
+        <div class="row py-lg-5">
+            <div class="col-lg-6 col-md-8 mx-auto">
+                <h1 class="fw-light">Album example</h1>
+                <p class="lead text-body-secondary">Something short and leading about the collection below—its contents, the creator, etc. Make it short and sweet, but not too short so folks don’t simply skip over it entirely.</p>
+                <form class="col-12 col-lg-auto mb-3 mb-lg-0 me-lg-3" role="search", action="/gallery/home" method="get">
+                    <input type="search" class="form-control form-control-dark text-bg-white"
+                           name="keyword" placeholder="Search Your Gallery" aria-label="Search" th:value="${pageRequestDTO.keyword}">
+                    <p class="py-2">
+                        <button type="submit" class="btn btn-primary my-2 searchBtn">Search Gallery</button>
+                        <button type="button" class="btn btn-secondary my-2 clearBtn">Clear</button>
+                    </p>
+                </form>
+            </div>
+        </div>
+    </section>
+    <div class="album py-5 bg-body-tertiary">
+        <div class="container">
+            <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-3">
+                <div class="col" th:each="dto:${responseDTO.dtoList}">
+                    <div class="card shadow-sm">
+                        <svg th:if="${dto.galleryImageName == null}"
+                             class="bd-placeholder-img card-img-top" width="100%" height="225" xmlns="http://www.w3.org/2000/svg" role="img"
+                             aria-label="Placeholder: Thumbnail"
+                             preserveAspectRatio="xMidYMid slice" focusable="false">
+                            <title>Placeholder</title><rect width="100%" height="100%" fill="#55595c"/><text x="50%" y="50%" fill="#eceeef" dy=".3em">Thumbnail</text>
+                        </svg>
+                        <img th:if="${dto.galleryImageName != null}"
+                             class="bd-placeholder-img card-img-top" width="100%" height="225" th:src="|/view/${dto.galleryImageName}|">
+                        <div class="card-body">
+                            <h2>[[${dto.title}]]</h2>
+                            <p class="card-text">[[${dto.explanation}]]</p>
+                            <div class="d-flex justify-content-between align-items-center">
+                                <div class="btn-group">
+                                    <form th:action="|@{/gallery/board/list}|" method="get">
+                                        <input type="hidden" name="id" th:value="${dto.galleryID}">
+                                        <button type="submit" class="btn btn-sm btn-outline-secondary">View</button>
+                                    </form>
+                                    <button type="button" class="btn btn-sm btn-outline-secondary">Edit</button>
+                                </div>
+                                <small class="text-body-secondary">9 mins</small>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="container py-5 mx-auto">
+    <ul class="pagination flex-wrap">
+        <li class="page-item" th:if="${responseDTO.prev}">
+            <a class="page-link" th:data-num="${responseDTO.start - 1}">Previous</a>
+        </li>
+        <th:block th:each="i: ${#numbers.sequence(responseDTO.start, responseDTO.end)}">
+            <li th:class="${responseDTO.page == i}?'page-item active':'page-item'">
+                <a class="page-link" th:data-num="${i}">[[${i}]]</a>
+            </li>
+        </th:block>
+        <li class="page-item" th:if="${responseDTO.next}">
+            <a class="page-link" th:data-num="${responseDTO.end + 1}">Next</a>
+        </li>
+    </ul>
+    </div>
+</div>
+
+<script layout:fragment="script" th:inline="javascript">
+    function printGalleries(galleryDTO)
+    {
+        let str = '';
+        str += `<div class="card" style="width: 18rem;">
+                    <div class="card-body">
+                        <h5 class="card-title">${galleryDTO.title}</h5>
+                        <h6 class="card-subtitle mb-2 text-body-secondary">${galleryDTO.manager}</h6>
+                        <p class="card-text">${galleryDTO.explanation}</p>
+                    <a href="#" class="card-link">Card link</a>
+               </div>
+                </div>`
+    }
+    document.querySelector(".pagination").addEventListener("click", function(e){
+        e.preventDefault()
+        e.stopPropagation()
+        const target = e.target
+        if(target.tagName !== 'A'){
+            return
+        }
+        const num = target.getAttribute("data-num")
+        const formObj = document.querySelector("form")
+        formObj.innerHTML += `<input type='hidden' name='page' value='${num}'>`
+
+        formObj.submit()
+    }, false)
+
+    document.querySelector(".clearBtn").addEventListener("click", function (e){
+        e.preventDefault()
+        e.stopPropagation()
+        self.location = '/gallery/home'
+    }, false)
+</script>

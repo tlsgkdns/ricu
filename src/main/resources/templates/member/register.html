@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" xmlns="http://www.w3.org/1999/xhtml"
+      layout:decorate="~{layout/basic.html}">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+
+<div layout:fragment="content">
+    <form th:action="@{/member/register}" method="post">
+        <div class="input-group mb-3">
+            <span class="input-group-text">UserName</span>
+            <input type="text" class="form-control" name="nickname" placeholder="Username">
+        </div>
+        <div class="input-group mb-3">
+            <span class="input-group-text">Member ID</span>
+            <input type="text" class="form-control" name="memberID" placeholder="MemberID">
+        </div>
+        <div class="input-group mb-3">
+            <span class="input-group-text">Password</span>
+            <input type="text" class="form-control" name="password" placeholder="Password">
+        </div>
+        <div class="input-group mb-3">
+            <span class="input-group-text">E-MAIL</span>
+            <input type="text" class="form-control" name="email" placeholder="Email">
+        </div>
+        <div class="my-4">
+            <div class="front-end">
+                <button type="submit" class="btn btn-primary submitBtn">Submit</button>
+            </div>
+        </div>
+    </form>
+</div>
+</body>
+<script layout:fragment="script" th:inline="javascript">
+
+    const error = [[${error}]]
+
+    if(error)
+    {
+        alert(error);
+    }
+</script>
+</html>
