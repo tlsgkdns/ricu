@@ -62,6 +62,7 @@ public class BoardServiceImpl implements BoardService{
 
     @Override
     public void removeBoard(Long bno) {
+        boardRepository.getById(bno).deleteBoard();
         boardRepository.deleteById(bno);
     }
 
@@ -83,6 +84,14 @@ public class BoardServiceImpl implements BoardService{
         board.modifyBoard(boardDTO.getTitle(), boardDTO.getContent());
 
         boardRepository.save(board);
+    }
+
+    @Override
+    public BoardModifyDTO readBoardForModify(Long bno) {
+        Board board = boardRepository.getById(bno);
+        BoardModifyDTO boardModifyDTO = modelMapper.map(board, BoardModifyDTO.class);
+        boardModifyDTO.setWriter(board.getWriter().getNickname());
+        return boardModifyDTO;
     }
 
     public Board dtoToEntity(BoardDTO boardDTO)

@@ -5,6 +5,7 @@ import com.shin.ricu.security.dto.MemberSecurityDTO;
 import com.shin.ricu.security.handler.CustomAccessDeniedHandler;
 import com.shin.ricu.security.handler.LoginFailureHandler;
 import com.shin.ricu.security.handler.LoginSuccessHandler;
+import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.context.annotation.Bean;
@@ -45,7 +46,18 @@ public class SecurityConfig {
                 .loginPage("/member/login").successHandler(authenticationSuccessHandler())
                         .failureHandler(loginFailureHandler()))
                 .userDetailsService(memberDetailService)
-                .exceptionHandling(e ->accessDeniedHandler());
+                .exceptionHandling(e ->accessDeniedHandler()
+                ).logout(a -> a.logoutUrl("/member/logout").
+                        addLogoutHandler(((request, response, authentication) -> {
+                            HttpSession session = request.getSession();
+                            if(session != null)
+                            {
+                                session.invalidate();
+                            }
+                        })).logoutSuccessHandler(((request, response, authentication) -> {
+                            response.sendRedirect("/member/login");
+                        }))
+                        .deleteCookies("remeber-me"));
         return http.build();
     }
 

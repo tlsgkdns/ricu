@@ -42,9 +42,10 @@ public class BoardController {
         model.addAttribute("galleryDTO", galleryService.getGalleryDTO(id));
     }
     @GetMapping("/write")
-    public void write(Model model, @RequestParam String id, @AuthenticationPrincipal MemberSecurityDTO member)
+    public void write(Model model, @RequestParam String id,
+                      @AuthenticationPrincipal MemberSecurityDTO member)
     {
-        model.addAttribute("galleryID", id);
+        model.addAttribute("galleryDTO", galleryService.getGalleryDTO(id));
         model.addAttribute("member", member);
     }
     @PostMapping("/write")
@@ -72,25 +73,25 @@ public class BoardController {
         log.info(boardDTO);
         PageResponseDTO<BoardListWithGalleryDTO> responseDTO = boardService.getBoardListWithGallery(pageRequestDTO, boardDTO.getGalleryID()
                 , pageRequestDTO.getType(), pageRequestDTO.getKeyword());
-        model.addAttribute("galleryID", boardDTO.getGalleryID());
+        model.addAttribute("galleryDTO", galleryService.getGalleryDTO(boardDTO.getGalleryID()));
         model.addAttribute("responseDTO", responseDTO);
         model.addAttribute("dto", boardDTO);
     }
 
     @GetMapping("/modify")
-    public void modifyBoard(Model model, Long bno)
+    public void modifyBoard(Model model, Long bno, PageRequestDTO pageRequestDTO)
     {
-        BoardDTO boardDTO = boardService.readBoard(bno);
+        BoardModifyDTO boardDTO = boardService.readBoardForModify(bno);
         log.info(boardDTO);
-        model.addAttribute("galleryID", boardDTO.getGalleryID());
         model.addAttribute("dto", boardDTO);
+        model.addAttribute("galleryDTO", galleryService.getGalleryDTO(boardDTO.getGalleryID()));
     }
-
-
     @PostMapping("/comment")
-    public String addComment(String galleryID, CommentDTO commentDTO, RedirectAttributes redirectAttributes)
+    public String addComment(String galleryID, CommentDTO commentDTO, RedirectAttributes redirectAttributes,
+                             @AuthenticationPrincipal MemberSecurityDTO member)
     {
-        if(commentDTO.getWriter() == null) commentDTO.setWriter("User");
+        if(member != null) commentDTO.setWriter(member.getNickname());
+        if(commentDTO.getWriter() == null ) commentDTO.setWriter("User");
         boardService.addComment(commentDTO);
         redirectAttributes.addAttribute("id", galleryID);
         redirectAttributes.addAttribute("bno", commentDTO.getBno());

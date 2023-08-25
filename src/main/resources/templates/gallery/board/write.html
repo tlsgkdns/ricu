@@ -2,12 +2,13 @@
 <html xmlns:th="http://www.thymeleaf.org"
       xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity5"
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
-      layout:decorate="~{layout/basic.html}">
+      layout:decorate="~{layout/basic2.html}">
 <head>
     <meta charset="UTF-8">
     <title>Board Register</title>
 </head>
 <div layout:fragment="content">
+  <h1><a class="fw-bold" th:href="@{/gallery/board/list(id=${galleryDTO.galleryID})}">[[${galleryDTO.title}]] Gallery</a></h1>
   <div class="row mt-3">
     <div class="col">
       <div class="card">
@@ -20,7 +21,7 @@
             <div class="input-group mb-3">
               <span class="input-group-text">Gallery</span>
               <input type="text" name="galleryID" class="form-control" placeholder="Writer"
-                     th:value="${galleryID}" readonly>
+                     th:value="${galleryDTO.galleryID}" readonly>
             </div>
             <div class="input-group mb-3">
               <span class="input-group-text">Title</span>

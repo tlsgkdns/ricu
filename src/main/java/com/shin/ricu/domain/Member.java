@@ -12,7 +12,7 @@ import java.util.Set;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-@ToString(exclude = "roleSet")
+@ToString(exclude = {"roleSet", "password"})
 public class Member extends BaseEntity{
     @Id
     private String memberID;

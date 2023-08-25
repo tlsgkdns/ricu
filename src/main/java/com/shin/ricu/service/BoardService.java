@@ -18,4 +18,6 @@ public interface BoardService {
     public CommentKey addComment(CommentDTO commentDTO);
 
     public void modifyBoard(BoardDTO boardDTO);
+
+    public BoardModifyDTO readBoardForModify(Long bno);
 }

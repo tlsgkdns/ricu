@@ -7,6 +7,7 @@ import lombok.extern.log4j.Log4j2;
 import org.hibernate.annotations.BatchSize;
 import org.hibernate.annotations.NotFound;
 import org.hibernate.annotations.NotFoundAction;
+import org.hibernate.annotations.OnDelete;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -53,5 +54,10 @@ public class Board extends BaseEntity{
     {
         this.title = title;
         this.content = content;
+    }
+
+    public void deleteBoard()
+    {
+        writer = null;
     }
 }
