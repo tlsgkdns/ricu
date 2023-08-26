@@ -14,10 +14,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.util.List;
@@ -31,6 +28,11 @@ public class BoardController {
     private final GalleryService galleryService;
     private final BoardService boardService;
 
+    @ModelAttribute("galleryDTO")
+    public GalleryDTO galleryDTO(@RequestParam String id)
+    {
+        return galleryService.getGalleryDTO(id);
+    }
     @GetMapping("/list")
     public void boardList(PageRequestDTO pageRequestDTO, Model model, @RequestParam String id)
     {
@@ -39,13 +41,11 @@ public class BoardController {
                 , pageRequestDTO.getType(), pageRequestDTO.getKeyword());
         log.info(responseDTO);
         model.addAttribute("responseDTO", responseDTO);
-        model.addAttribute("galleryDTO", galleryService.getGalleryDTO(id));
     }
     @GetMapping("/write")
     public void write(Model model, @RequestParam String id,
                       @AuthenticationPrincipal MemberSecurityDTO member)
     {
-        model.addAttribute("galleryDTO", galleryService.getGalleryDTO(id));
         model.addAttribute("member", member);
     }
     @PostMapping("/write")
@@ -58,6 +58,7 @@ public class BoardController {
         {
             log.info("has error.............");
             redirectAttributes.addFlashAttribute("errors", bindingResult.getAllErrors());
+            redirectAttributes.addAttribute("id", boardDTO.getGalleryID());
             return "redirect:/gallery/board/write";
         }
         log.info(boardDTO);
@@ -73,7 +74,6 @@ public class BoardController {
         log.info(boardDTO);
         PageResponseDTO<BoardListWithGalleryDTO> responseDTO = boardService.getBoardListWithGallery(pageRequestDTO, boardDTO.getGalleryID()
                 , pageRequestDTO.getType(), pageRequestDTO.getKeyword());
-        model.addAttribute("galleryDTO", galleryService.getGalleryDTO(boardDTO.getGalleryID()));
         model.addAttribute("responseDTO", responseDTO);
         model.addAttribute("dto", boardDTO);
     }
@@ -87,13 +87,13 @@ public class BoardController {
         model.addAttribute("galleryDTO", galleryService.getGalleryDTO(boardDTO.getGalleryID()));
     }
     @PostMapping("/comment")
-    public String addComment(String galleryID, CommentDTO commentDTO, RedirectAttributes redirectAttributes,
+    public String addComment(String id, CommentDTO commentDTO, RedirectAttributes redirectAttributes,
                              @AuthenticationPrincipal MemberSecurityDTO member)
     {
         if(member != null) commentDTO.setWriter(member.getNickname());
         if(commentDTO.getWriter() == null ) commentDTO.setWriter("User");
         boardService.addComment(commentDTO);
-        redirectAttributes.addAttribute("id", galleryID);
+        redirectAttributes.addAttribute("id", id);
         redirectAttributes.addAttribute("bno", commentDTO.getBno());
         return "redirect:/gallery/board/read";
     }
@@ -126,6 +126,7 @@ public class BoardController {
         }
         boardService.modifyBoard(boardDTO);
         redirectAttributes.addFlashAttribute("result", "modified");
+        redirectAttributes.addAttribute("id", boardDTO.getGalleryID());
         redirectAttributes.addAttribute("bno", boardDTO.getBno());
         return "redirect:/gallery/board/read";
     }

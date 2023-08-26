@@ -55,6 +55,7 @@ public class GalleryServiceImpl implements GalleryService{
     @Override
     public GalleryDTO getGalleryDTO(String id)
     {
+        log.info("Search for........... " + id);
         Gallery gallery = galleryRepository.findById(id).orElseThrow();
         return entityToDTO(gallery);
     }

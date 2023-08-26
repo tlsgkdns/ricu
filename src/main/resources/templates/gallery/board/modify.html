@@ -7,7 +7,7 @@
   <title>Board Modify</title>
 </head>
 <div layout:fragment="content">
-  <h1><a class="text-bg-success" th:href="@{/gallery/board/list(id=${dto.galleryID})}">[[${galleryDTO.title}]] Gallery</a></h1>
+  <h1><a class="text-bg-success" th:href="@{/gallery/board/list(id=${galleryDTO.galleryID})}">[[${galleryDTO.title}]] Gallery</a></h1>
   <div class="row mt-3">
     <div class="col">
       <div class="card">
@@ -15,8 +15,9 @@
           Board Modify
         </div>
         <div class="card-body">
-          <form th:action="@{/board/modify}" method="post" id="f1">
-            <input type="hidden" name=galleryID th:value="${dto.galleryID}">
+          <form th:action="@{/gallery/board/modify}" method="post" id="f1">
+            <input type="hidden" name="galleryID" th:value="${galleryDTO.galleryID}">
+            <input type="hidden" name="id" th:value="${galleryDTO.galleryID}">
             <div class="input-group mb-3">
               <span class="input-group-text">Bno</span>
               <input type="text" class="form-control" name=bno th:value="${dto.bno}" readonly>
@@ -56,8 +57,7 @@
     document.querySelector(".modBtn").addEventListener("click", function (e){
       e.preventDefault()
       e.stopPropagation()
-      formObj.action = `/gallery/board/modify?id=${galleryID}&${link}`
-      formObj.method='post'
+
       formObj.submit()
     }, false)
 
@@ -66,7 +66,6 @@
       e.stopPropagation()
       formObj.action = `/gallery/board/remove`
       formObj.method = 'post'
-
       formObj.submit()
     }, false)
   </script>

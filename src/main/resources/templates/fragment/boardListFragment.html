@@ -43,7 +43,7 @@
           <tr th:each="dto:${responseDTO.dtoList}">
             <td>[[${dto.bno}]]</td>
             <td>
-              <a th:href="|@{/gallery/board/read(bno=${dto.bno})}|" class="text-decoration-none">[[${dto.title}]]</a>
+              <a th:href="|@{/gallery/board/read(id=${galleryID},bno=${dto.bno})}|" class="text-decoration-none">[[${dto.title}]]</a>
               <span class="badge progress-bar-success" style="background-color:#0a53be" >
                                     [[${dto.commentCount}]]
                                 </span>

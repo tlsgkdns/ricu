@@ -17,10 +17,10 @@
         </div>
         <div class="card-body">
           <form action="/gallery/board/write" method="post">
-
+            <input type="hidden" name="id" th:value="${galleryDTO.galleryID}">
             <div class="input-group mb-3">
               <span class="input-group-text">Gallery</span>
-              <input type="text" name="galleryID" class="form-control" placeholder="Writer"
+              <input type="text" name="galleryID" class="form-control" placeholder="Gallery"
                      th:value="${galleryDTO.galleryID}" readonly>
             </div>
             <div class="input-group mb-3">

@@ -41,7 +41,7 @@
                         <button type="button" class="btn btn-primary">List</button>
                     </a>
                     <a th:if="${user != null && user.class.name != 'java.lang.String' && user.memberID == dto.writer}"
-                       th:href="|@{/gallery/board/modify(bno=${dto.bno})}&${link}|" class="text-decoration-none">
+                       th:href="|@{/gallery/board/modify(id=${galleryDTO.galleryID}, bno=${dto.bno})}&${link}|" class="text-decoration-none">
                         <button type="button" class="btn btn-secondary">Modify</button>
                     </a>
                 </div>
