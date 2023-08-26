@@ -86,18 +86,6 @@ public class BoardController {
         model.addAttribute("dto", boardDTO);
         model.addAttribute("galleryDTO", galleryService.getGalleryDTO(boardDTO.getGalleryID()));
     }
-    @PostMapping("/comment")
-    public String addComment(String id, CommentDTO commentDTO, RedirectAttributes redirectAttributes,
-                             @AuthenticationPrincipal MemberSecurityDTO member)
-    {
-        if(member != null) commentDTO.setWriter(member.getNickname());
-        if(commentDTO.getWriter() == null ) commentDTO.setWriter("User");
-        boardService.addComment(commentDTO);
-        redirectAttributes.addAttribute("id", id);
-        redirectAttributes.addAttribute("bno", commentDTO.getBno());
-        return "redirect:/gallery/board/read";
-    }
-
     @PostMapping("/remove")
     public String remove(BoardDTO boardDTO, RedirectAttributes redirectAttributes)
     {

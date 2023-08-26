@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
       xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
       layout:decorate="~{layout/basic2.html}">
 <link href="/assets/dist/css/bootstrap.min.css" rel="stylesheet">
 
@@ -49,7 +50,8 @@
             <img th:if="${galleryDTO.galleryImageName != null}"class="bd-placeholder-img bd-placeholder-img-lg featurette-image img-fluid mx-auto" width="300" height="300" xmlns="http://www.w3.org/2000/svg" role="img"
                  aria-label="Placeholder: 500x500" th:src="|/view/${galleryDTO.galleryImageName}|" preserveAspectRatio="xMidYMid slice" focusable="false"><title>Placeholder</title><rect width="100%" height="100%" fill="var(--bs-secondary-bg)"/></img>
             <div class="my-2">
-                <button type="button" class="btn btn-info">Change Image</button>
+                <button type="button" sec:authorize="isAuthenticated()"
+                        th:if="${#authentication.principal.nickname == galleryDTO.manager}" class="btn btn-info">Change Image</button>
             </div>
         </div>
 

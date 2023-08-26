@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
       xmlns:th="http://www.thymeleaf.org"
-      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity5"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
 >
 <meta charset="utf-8" />
 <head><script src="/../assets/js/color-modes.js"></script>
@@ -185,17 +185,23 @@
 </th:block>
 
 <script th:inline="javascript">
-  document.querySelector(".loginBtn").addEventListener("click", function (e) {
-    e.preventDefault()
-    e.stopPropagation()
-    console.log("login clicked!")
-    self.location = '/member/login'
-  }, false)
+  const loginBtn = document.querySelector(".loginBtn")
+  if(loginBtn != null)
+  {
+    loginBtn.addEventListener("click", function (e) {
+      e.preventDefault()
+      e.stopPropagation()
+      console.log("login clicked!")
+      self.location = '/member/login'
+    }, false)
+    document.querySelector(".registerBtn").addEventListener("click", function (e){
+      e.preventDefault()
+      e.stopPropagation()
+      self.location = '/member/register'
+    })
+  }
 
-  document.querySelector(".registerBtn").addEventListener("click", function (e){
-    e.preventDefault()
-    e.stopPropagation()
-    self.location = '/member/register'
-  })
+
+
 </script>
 </html>

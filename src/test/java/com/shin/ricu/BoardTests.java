@@ -171,19 +171,16 @@ public class BoardTests {
     {
         CommentDTO comment = CommentDTO.builder()
                 .bno(1L)
-                .content("Hello Comment!!!")
+                .commentText("Hello Comment!!!")
                 .writer("Sign")
                 .build();
         CommentDTO comment2 = CommentDTO.builder()
                 .bno(1L)
-                .content("Hello Comment!!! Again!")
+                .commentText("Hello Comment!!! Again!")
                 .writer("Everlasting")
                 .build();
 
         log.info("This is Comment " + comment);
-        boardService.addComment(comment);
-        boardService.addComment(comment2);
-        Assertions.assertTrue(boardService.readBoard(1L).getCommentList().size() == 2);
     }
 
 }

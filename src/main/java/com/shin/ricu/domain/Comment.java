@@ -1,32 +1,30 @@
 package com.shin.ricu.domain;
 
 
-import com.shin.ricu.domain.entityKey.CommentKey;
 import jakarta.persistence.*;
 import lombok.*;
 
 @Entity
+@Table(name="Comment", indexes = {
+        @Index(name="idx_comment_board_bno", columnList = "board_bno")
+})
 @Getter
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
 @ToString(exclude = "commentKey")
-public class Comment {
-
-    @EmbeddedId
-    private CommentKey commentKey;
-
-    @MapsId("bno")
+public class Comment extends BaseEntity{
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long commentID;
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "bno")
     private Board board;
 
-    private String content;
+    private String commentText;
 
     private String writer;
-    public void setCommentKey(Board board, Long rno)
+    public void changeText(String text)
     {
-        this.board = board;
-        commentKey = new CommentKey(rno);
+        commentText = text;
     }
 }

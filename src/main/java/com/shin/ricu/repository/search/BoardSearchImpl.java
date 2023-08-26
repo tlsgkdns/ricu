@@ -6,7 +6,6 @@ import com.querydsl.core.types.Projections;
 import com.querydsl.jpa.JPQLQuery;
 import com.shin.ricu.domain.*;
 import com.shin.ricu.dto.BoardListWithGalleryDTO;
-import com.shin.ricu.dto.QBoardListWithGalleryDTO;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
@@ -25,13 +24,13 @@ public class BoardSearchImpl extends QuerydslRepositorySupport implements BoardS
     public Page<BoardListWithGalleryDTO> searchBoard(Pageable pageable, String galleryID, String types, String keyword)
     {
         QBoard board = QBoard.board;
-        QGallery gallery = QGallery.gallery;
         QComment comment = QComment.comment;
+        QMember member = QMember.member;
         JPQLQuery<Board> query = from(board);
-
-        query.leftJoin(gallery).on(board.gallery.eq(gallery));
+        query.leftJoin(comment).on(comment.board.eq(board));
+        query.innerJoin(member).on(member.memberID.eq(board.writer.memberID));
         query.where(board.gallery.galleryID.eq(galleryID));
-        log.info(types + " is my TYPE@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@");
+        query.groupBy(board);
         if((types != null && types.length() > 0) && keyword != null)
         {
             BooleanBuilder booleanBuilder = new BooleanBuilder();
@@ -48,12 +47,23 @@ public class BoardSearchImpl extends QuerydslRepositorySupport implements BoardS
             }
         }
 
-        getQuerydsl().applyPagination(pageable, query);
         List<Board> list = query.fetch();
         log.info(list.size() + " is in Here!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! But, ");
-        List<BoardListWithGalleryDTO> boardList = query.select(new QBoardListWithGalleryDTO(board)).from(board).fetch();
+        for (Board b: list) {
+            log.info(b);
+        }
+        JPQLQuery<BoardListWithGalleryDTO> dtoQuery = query.select(Projections.bean(BoardListWithGalleryDTO.class,
+                board.bno,
+                board.title,
+                board.writer.nickname.as("writer"),
+                board.regDate,
+                comment.count().as("commentCount")
+        ));
+
+        this.getQuerydsl().applyPagination(pageable, dtoQuery);
+        List<BoardListWithGalleryDTO> boardList = dtoQuery.fetch();
         log.info(boardList.size() + " is DTO in here !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
-        return new PageImpl<>(boardList, pageable, query.fetchCount());
+        return new PageImpl<>(boardList, pageable, dtoQuery.fetchCount());
     }
 
 

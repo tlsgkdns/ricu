@@ -1,6 +1,5 @@
 package com.shin.ricu;
 
-import com.shin.ricu.domain.entityKey.CommentKey;
 import com.shin.ricu.dto.CommentDTO;
 import com.shin.ricu.service.BoardService;
 import com.shin.ricu.service.CommentService;
@@ -24,19 +23,10 @@ public class CommentTests {
     {
 
     }
-    @Test
-    public void replyCompositeKeyTest()
-    {
-        CommentKey commentKey1 = commentService.writeComment(boardService.readBoard(501L), "aaa");
-        CommentKey commentKey2 = commentService.writeComment(boardService.readBoard(502L), "bbb");
-        log.info("replyKey1: " + commentKey1);
-        log.info("replyKey2: " + commentKey2);
-    }
 
     @Test
     public void replyDTOTest()
     {
-        CommentDTO replyDTO = CommentDTO.builder().content("ccc").bno(3L).writer("Dealer").build();
-        commentService.registerComment(replyDTO);
+
     }
 }

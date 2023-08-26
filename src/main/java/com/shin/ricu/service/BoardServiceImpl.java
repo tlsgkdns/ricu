@@ -2,7 +2,6 @@ package com.shin.ricu.service;
 
 import com.shin.ricu.domain.Board;
 import com.shin.ricu.domain.Comment;
-import com.shin.ricu.domain.entityKey.CommentKey;
 import com.shin.ricu.dto.*;
 import com.shin.ricu.dto.page.PageRequestDTO;
 import com.shin.ricu.dto.page.PageResponseDTO;
@@ -66,14 +65,6 @@ public class BoardServiceImpl implements BoardService{
         boardRepository.deleteById(bno);
     }
 
-    @Transactional
-    @Override
-    public CommentKey addComment(CommentDTO commentDTO) {
-        Comment comment = modelMapper.map(commentDTO, Comment.class);
-        Optional<Board> boardOptional = boardRepository.findById(commentDTO.getBno());
-        return boardOptional.orElseThrow().addComment(comment.getContent(), comment.getWriter());
-    }
-
     @Override
     public void modifyBoard(BoardDTO boardDTO) {
 
@@ -99,7 +90,6 @@ public class BoardServiceImpl implements BoardService{
         Board board = Board.builder()
                 .writer(memberRepository.getById(boardDTO.getWriter()))
                 .content(boardDTO.getContent())
-                .commentList(boardDTO.getCommentList())
                 .title(boardDTO.getTitle())
                 .bno(boardDTO.getBno())
                 .gallery(galleryRepository.getById(boardDTO.getGalleryID()))

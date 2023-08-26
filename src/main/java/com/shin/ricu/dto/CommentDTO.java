@@ -8,7 +8,8 @@ import lombok.*;
 @NoArgsConstructor
 @ToString
 public class CommentDTO {
+    private Long commentID;
     private Long bno;
-    private String content;
+    private String commentText;
     private String writer;
 }

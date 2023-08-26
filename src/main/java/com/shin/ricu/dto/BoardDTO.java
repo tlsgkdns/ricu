@@ -22,6 +22,4 @@ public class BoardDTO {
     private String content;
 
     private String writer;
-
-    private List<Comment> commentList = new ArrayList<>();
 }

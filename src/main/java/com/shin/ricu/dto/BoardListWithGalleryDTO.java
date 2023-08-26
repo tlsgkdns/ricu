@@ -20,26 +20,4 @@ public class BoardListWithGalleryDTO {
     private String writer;
     private LocalDateTime regDate;
     private Long commentCount;
-
-    @QueryProjection
-    public BoardListWithGalleryDTO(Long bno, String title, String writer, LocalDateTime regDate, List<Comment> commentList)
-    {
-        this.bno = bno;
-        this.title = title;
-        this.writer = writer;
-        this.regDate = regDate;
-        this.commentCount = Long.valueOf(commentList.size());
-        log.info("This is DTO which is " + this.title);
-    }
-
-    @QueryProjection
-    public BoardListWithGalleryDTO(Board board)
-    {
-        this.bno = board.getBno();
-        this.title = board.getTitle();
-        if(board.getWriter() == null) this.writer = "Member";
-        else this.writer = board.getWriter().getNickname();
-        this.regDate = board.getRegDate();
-        this.commentCount = Long.valueOf(board.getCommentList().size());
-    }
 }

@@ -13,7 +13,7 @@
     <div class="card justify-content-center">
         <div class="card-header">Create Gallery</div>
         <div class="card-body">
-            <form th:action="@{/gallery/create}" method="post">
+            <form th:action="@{/gallery/create}" method="post" id="f1">
                 <div class="input-group mb-3">
                     <span class="input-group-text">UrlName</span>
                     <input type="text" class="form-control" name="galleryID" placeholder="urlName">
@@ -170,7 +170,7 @@
         }
         target.innerHTML = str;
 
-        document.querySelector("form").submit();
-        document.querySelector("form").reset();
+        document.querySelector("#f1").submit();
+        document.querySelector("#f1").reset();
     }, false)
 </script>

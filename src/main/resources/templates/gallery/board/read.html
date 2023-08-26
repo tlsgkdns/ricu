@@ -48,38 +48,133 @@
             </div>
         </div>
     </div>
-    <h2 class="my-3">We have [[${dto.commentList.size()}]] Comments</h2>
+    <h2 class="my-3">We have 0 Comments</h2>
     <hr class="featurette-divider">
     <div class="card row mt-3">
         <div class="card-header">
             Comment
         </div>
         <div class="card-body col-md-12">
-            <table class="table">
-                <thead>
-                <tr>
-                    <th scope="col">Writer</th>
-                    <th scope="col">Content</th>
-                </tr>
-                </thead>
-                <tbody>
-                <tr th:each="comment:${dto.commentList}">
-                    <td>[[${comment.writer}]]</td>
-                    <td>[[${comment.content}]]</td>
-                </tr>
-                </tbody>
-            </table>
-            <div class="my-4">
-                <form th:action="@{/gallery/board/comment(id=${galleryDTO.galleryID})}" method="post">
-                    <textarea type="text" name="content"
-                              placeholder="Write Your Comment on the Board" class="form-control col-sm-5" rows="5"></textarea>
-                    <input type="hidden" name="bno" th:value="${dto.bno}">
-                    <button type="submit" class="float-end btn btn-info my-3 addReplyBtn">ADD COMMENT</button>
-                </form>
+            <ul class="list-group commentList">
+            </ul>
+            <div class="row mt-3">
+                <div class="col">
+                    <ul class="pagination commentPaging">
+                    </ul>
+                </div>
+            </div>
+            <div class="my-4" th:with="user=${#authentication.principal}">
+                <textarea type="text" placeholder="Write Your Comment on the Board"
+                          class="form-control col-sm-5 commentText" rows="5"></textarea>
+                <input type="text" class="form-control commentWriter" value="USER" readonly>
+                <button type="submit" class="float-end btn btn-info my-3 addCommentBtn">ADD COMMENT</button>
             </div>
         </div>
     </div>
     <div class="my-5" th:insert="~{/fragment/boardListFragment::boardList(${galleryDTO.galleryID}, ${responseDTO})}">
     </div>
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <script src="/js/comment.js"></script>
 </div>
+
+<script layout:fragment="script" th:inline="javascript">
+
+    const bno = [[${dto.bno}]]
+    const commentList = document.querySelector(".commentList")
+    const commentPaging = document.querySelector(".commentPaging")
+    function printCommentList(dtoList)
+    {
+        let str = '';
+        if(dtoList && dtoList.length > 0)
+        {
+            for(const comm of dtoList)
+            {
+                str += `<li class="list-group-item d-flex commentItem container">
+                    <span class="col-2">${comm.writer}</span>
+                    <span class="col-6" data-rno="${comm.commentID}">${comm.commentText}</span>
+                    <span class="col-3"></span>
+                    <button type="button" class="btn btn-danger" onclick="removeCommentFunction(${comm.commentID})">Delete</button>
+                    </li>`
+            }
+        }
+        commentList.innerHTML = str
+    }
+
+    function removeCommentFunction(id)
+    {
+        console.log(id)
+        removeComment(id).then(
+            result =>{
+                alert(id + ' comment deleted')
+                commentText.value=''
+                page = 1
+
+                printComments(page, size)
+            }).catch(e => {
+            console.log(e)
+        })
+    }
+    function printPages(data)
+    {
+        let pageStr = '';
+        if(data.prev)
+        {
+            pageStr += `<li class="page-item"><a class="page-link" comment-page="${data.start - 1}">PREV</a></li>`
+        }
+        for(let i = data.start; i <= data.end; i++)
+        {
+            pageStr += `<li class="page-item ${i == data.page?"active" : ""} "><a class="page-link" comment-page="${i}">${i}</a></li>`
+        }
+        if(data.next)
+        {
+            pageStr += `<li class="page-item"><a class="page-link" comment-page="${data.end + 1}">NEXT</a></li>`
+        }
+        commentPaging.innerHTML = pageStr
+    }
+
+    function printComments(page, size, goLast)
+    {
+        getList({bno, page, size, goLast}).then(
+            data =>{
+                printCommentList(data.dtoList)
+                printPages(data)
+            }
+        ).catch(e => {
+            console.error(e)
+        })
+    }
+    printComments(1, 10)
+
+    const addCommentBtn = document.querySelector(".addCommentBtn")
+    const commentText = document.querySelector(".commentText")
+    const commentWriter = document.querySelector(".commentWriter")
+    addCommentBtn.addEventListener("click", function (e){
+        const commentObj = {
+            bno:bno,
+            commentText:commentText.value,
+            writer:commentWriter.value
+        }
+        addComment(commentObj).then(result =>{
+            commentText.value = ''
+            printComments(1, 10, true)
+        }).catch(e =>{
+            alert("Exception.....!")
+        })
+    }, false)
+    let page = 1
+    let size = 10
+    commentPaging.addEventListener("click", function (e){
+        e.preventDefault()
+        e.stopPropagation()
+
+        const target = e.target
+        if(!target || target.tagName != 'A')
+        {
+            return
+        }
+        const pageNum = target.getAttribute("comment-page")
+        page = pageNum
+        printComments(page, size)
+    }, false)
+</script>
 </html>
