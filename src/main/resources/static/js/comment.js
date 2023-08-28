@@ -38,3 +38,9 @@ async function removeComment(commentID)
     const result = await axios.delete(`/comments/${commentID}`)
     return result.data
 }
+
+async function getCommentCount(bno)
+{
+    const result = await axios.get(`/comments/count/${bno}`)
+    return result.data
+}

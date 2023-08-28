@@ -12,4 +12,5 @@ public class CommentDTO {
     private Long bno;
     private String commentText;
     private String writer;
+    private String profileImageName;
 }

@@ -1,7 +1,6 @@
 package com.shin.ricu.controller;
 
-import com.shin.ricu.domain.Gallery;
-import com.shin.ricu.dto.BoardListWithGalleryDTO;
+import com.shin.ricu.dto.board.BoardListWithGalleryDTO;
 import com.shin.ricu.dto.page.PageRequestDTO;
 import com.shin.ricu.dto.page.PageResponseDTO;
 import com.shin.ricu.service.BoardService;
@@ -13,8 +12,6 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-
-import java.util.List;
 
 @Controller
 @RequestMapping("/main")

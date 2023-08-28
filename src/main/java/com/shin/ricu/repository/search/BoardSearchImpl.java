@@ -1,11 +1,10 @@
 package com.shin.ricu.repository.search;
 
 import com.querydsl.core.BooleanBuilder;
-import com.querydsl.core.Tuple;
 import com.querydsl.core.types.Projections;
 import com.querydsl.jpa.JPQLQuery;
 import com.shin.ricu.domain.*;
-import com.shin.ricu.dto.BoardListWithGalleryDTO;
+import com.shin.ricu.dto.board.BoardListWithGalleryDTO;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
@@ -14,7 +13,6 @@ import org.springframework.data.jpa.repository.support.QuerydslRepositorySupport
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Log4j2
 public class BoardSearchImpl extends QuerydslRepositorySupport implements BoardSearch {
@@ -57,6 +55,7 @@ public class BoardSearchImpl extends QuerydslRepositorySupport implements BoardS
                 board.title,
                 board.writer.nickname.as("writer"),
                 board.regDate,
+                board.views,
                 comment.count().as("commentCount")
         ));
 

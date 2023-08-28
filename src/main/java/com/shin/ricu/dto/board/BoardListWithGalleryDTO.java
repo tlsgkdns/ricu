@@ -1,4 +1,4 @@
-package com.shin.ricu.dto;
+package com.shin.ricu.dto.board;
 
 import com.querydsl.core.annotations.QueryProjection;
 import com.shin.ricu.domain.Board;
@@ -19,5 +19,6 @@ public class BoardListWithGalleryDTO {
     private String title;
     private String writer;
     private LocalDateTime regDate;
+    private Long views;
     private Long commentCount;
 }

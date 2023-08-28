@@ -1,8 +1,10 @@
 package com.shin.ricu.service;
 
 import com.shin.ricu.domain.Gallery;
-import com.shin.ricu.domain.GalleryImage;
-import com.shin.ricu.dto.*;
+import com.shin.ricu.domain.image.GalleryImage;
+import com.shin.ricu.dto.gallery.GalleryCreateDTO;
+import com.shin.ricu.dto.gallery.GalleryDTO;
+import com.shin.ricu.dto.gallery.GalleryListAllDTO;
 import com.shin.ricu.dto.page.PageRequestDTO;
 import com.shin.ricu.dto.page.PageResponseDTO;
 import com.shin.ricu.repository.GalleryRepository;
@@ -58,6 +60,20 @@ public class GalleryServiceImpl implements GalleryService{
         log.info("Search for........... " + id);
         Gallery gallery = galleryRepository.findById(id).orElseThrow();
         return entityToDTO(gallery);
+    }
+
+    @Override
+    public void editGalleryInfo(GalleryDTO galleryDTO) {
+        log.info(galleryDTO);
+        Gallery gallery = galleryRepository.findById(galleryDTO.getGalleryID()).orElseThrow();
+        gallery.changeExplanation(galleryDTO.getExplanation());
+        if(galleryDTO.getGalleryImageName() != null)
+        {
+            String[] fileName = galleryDTO.getGalleryImageName().split("_");
+            log.info(fileName[0]);
+            gallery.setImage(fileName[0], fileName[1]);
+        }
+        galleryRepository.save(gallery);
     }
 
     //@Override

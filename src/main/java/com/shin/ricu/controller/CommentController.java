@@ -72,4 +72,12 @@ public class CommentController {
         resultMap.put("rno", rno);
         return resultMap;
     }
+
+    @GetMapping(value = "/count/{bno}")
+    public Long getCommentCount(@PathVariable("bno") Long bno)
+    {
+        log.info("Get Count " + bno);
+        Long count = commentService.getCommentCount(bno);
+        return count;
+    }
 }

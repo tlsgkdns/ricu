@@ -24,7 +24,7 @@
                 </div>
                 <div class="input-group mb-3">
                     <span class="input-group-text">Manager</span>
-                    <input type="text" class="form-control" name="manager" th:value="${managerName}" readonly>
+                    <input type="text" class="form-control" name="manager" th:value="${#authentication.principal.nickname}" readonly>
                 </div>
                 <div class="input-group mb-3">
                     <span class="input-group-text">Explanation</span>

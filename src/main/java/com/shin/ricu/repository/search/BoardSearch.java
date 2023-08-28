@@ -1,7 +1,6 @@
 package com.shin.ricu.repository.search;
 
-import com.shin.ricu.domain.Board;
-import com.shin.ricu.dto.BoardListWithGalleryDTO;
+import com.shin.ricu.dto.board.BoardListWithGalleryDTO;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 

@@ -2,12 +2,11 @@ package com.shin.ricu;
 
 import com.shin.ricu.domain.Member;
 import com.shin.ricu.domain.MemberRole;
-import com.shin.ricu.dto.MemberJoinDTO;
+import com.shin.ricu.dto.MemberDTO;
 import com.shin.ricu.exception.MemberIDExistException;
 import com.shin.ricu.repository.MemberRepository;
 import com.shin.ricu.service.MemberService;
 import lombok.extern.log4j.Log4j2;
-import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -45,7 +44,7 @@ public class MemberTests {
     @Test
     public void joinTest()
     {
-        MemberJoinDTO dto = MemberJoinDTO.builder()
+        MemberDTO dto = MemberDTO.builder()
                 .memberID("join Test")
                 .email("test@join.com")
                 .password("pass")

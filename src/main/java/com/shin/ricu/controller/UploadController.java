@@ -54,11 +54,13 @@ public class UploadController {
             {
                 e.printStackTrace();
             }
+            log.info("Upload FILE!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
             list.add(UploadResultDTO.builder()
                     .uuid(uuid).fileName(originalName).isImage(image).build()
             );
             return list;
         }
+        log.info("return null....");
         return null;
     }
 

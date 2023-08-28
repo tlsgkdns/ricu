@@ -1,22 +1,15 @@
 package com.shin.ricu.repository.search;
 
-import com.querydsl.core.Tuple;
 import com.querydsl.core.types.Projections;
 import com.querydsl.jpa.JPQLQuery;
 import com.shin.ricu.domain.Gallery;
 import com.shin.ricu.domain.QGallery;
-import com.shin.ricu.domain.QGalleryImage;
-import com.shin.ricu.dto.BoardListWithGalleryDTO;
-import com.shin.ricu.dto.GalleryListAllDTO;
-import com.shin.ricu.service.BoardServiceImpl;
-import lombok.RequiredArgsConstructor;
+import com.shin.ricu.dto.gallery.GalleryListAllDTO;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.support.QuerydslRepositorySupport;
-import org.springframework.stereotype.Repository;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 

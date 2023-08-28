@@ -43,7 +43,12 @@
                                         <input type="hidden" name="id" th:value="${dto.galleryID}">
                                         <button type="submit" class="btn btn-sm btn-outline-secondary">View</button>
                                     </form>
-                                    <button type="button" class="btn btn-sm btn-outline-secondary">Edit</button>
+                                    <form th:action="|@{/gallery/edit}|" method="get">
+                                        <input type="hidden" name="id" th:value="${dto.galleryID}">
+                                        <button type="submit" sec:authorize="isAuthenticated()" th:if="${#authentication.principal.nickname == dto.manager}"
+                                                class="btn btn-sm btn-outline-secondary">Edit</button>
+                                    </form>
+
                                 </div>
                                 <small class="text-body-secondary">9 mins</small>
                             </div>

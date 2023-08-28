@@ -1,11 +1,9 @@
 package com.shin.ricu.domain;
 
+import com.shin.ricu.domain.image.GalleryImage;
 import jakarta.persistence.*;
 import lombok.*;
 import lombok.extern.log4j.Log4j2;
-import org.hibernate.annotations.Cascade;
-import org.hibernate.annotations.NotFound;
-import org.hibernate.annotations.NotFoundAction;
 
 @Entity
 @NoArgsConstructor
@@ -26,12 +24,14 @@ public class Gallery extends BaseEntity{
     private GalleryImage galleryImage;
     public void setImage(String uuid, String fileName)
     {
-        GalleryImage image = GalleryImage.builder()
-                .uuid(uuid)
-                .fileName(fileName)
-                .gallery(this)
-                .build();
+        GalleryImage image = new GalleryImage(uuid, fileName, this);
         log.info(image);
         galleryImage = image;
     }
+
+    public void changeExplanation(String explanation)
+    {
+        this.explanation = explanation;
+    }
+
 }

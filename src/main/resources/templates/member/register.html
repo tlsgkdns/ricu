@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org"
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" xmlns="http://www.w3.org/1999/xhtml"
-      layout:decorate="~{layout/basic.html}">
+      layout:decorate="~{layout/basic2.html}">
 <head>
     <meta charset="UTF-8">
     <title>Title</title>
@@ -9,38 +9,214 @@
 <body>
 
 <div layout:fragment="content">
-    <form th:action="@{/member/register}" method="post">
-        <div class="input-group mb-3">
-            <span class="input-group-text">UserName</span>
-            <input type="text" class="form-control" name="nickname" placeholder="Username">
-        </div>
-        <div class="input-group mb-3">
-            <span class="input-group-text">Member ID</span>
-            <input type="text" class="form-control" name="memberID" placeholder="MemberID">
-        </div>
-        <div class="input-group mb-3">
-            <span class="input-group-text">Password</span>
-            <input type="text" class="form-control" name="password" placeholder="Password">
-        </div>
-        <div class="input-group mb-3">
-            <span class="input-group-text">E-MAIL</span>
-            <input type="text" class="form-control" name="email" placeholder="Email">
-        </div>
-        <div class="my-4">
-            <div class="front-end">
-                <button type="submit" class="btn btn-primary submitBtn">Submit</button>
+    <div class="container py-5">
+        <form th:action="@{/member/register}" method="post" id="f1">
+            <div class="row">
+                <div class="col-lg-4">
+                    <div class="card mb-3">
+                        <div class="card-body text-center">
+                            <h1>Profile Image</h1>
+                            <div class="profileImage">
+                                <img src="https://mdbcdn.b-cdn.net/img/Photos/new-templates/bootstrap-chat/ava3.webp" alt="avatar"
+                                     class="rounded-circle img-fluid" style="width: 150px;" >
+                            </div>
+                            <div class="d-flex justify-content-center mb-2 my-2">
+                                <button class="btn btn-primary setProfileImageBtn" type="button">Set Profile Image</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-8">
+                <div class="card mb-6">
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="input-group mb-3">
+                                <span class="input-group-text">NickName</span>
+                                <input type="text" class="form-control" name="nickname" placeholder="Nickname">
+                                <button type="button" class="btn btn-info nicknameUniqueCheckBtn">Unique Check</button>
+                            </div>
+                            &nbsp;
+                            <div class="input-group mb-3">
+                                <span class="input-group-text">Member ID</span>
+                                <input type="text" class="form-control" name="memberID" placeholder="MemberID">
+                                <button type="button" class="btn btn-info memberIDUniqueCheckBtn">Unique Check</button>
+                            </div>
+                            &nbsp;
+                            <div class="input-group mb-3">
+                                <span class="input-group-text">Password</span>
+                                <input type="text" class="form-control" name="password" placeholder="Password">
+                            </div>
+                            &nbsp;
+                            <div class="input-group mb-3">
+                                <span class="input-group-text">E-MAIL</span>
+                                <input type="text" class="form-control" name="email" placeholder="Email">
+                            </div>
+                            <div class="uploadHidden">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="my-4">
+                <div class="front-end">
+                    <button type="button" class="btn btn-primary submitBtn">Submit</button>
+                </div>
+            </div>
+        </form>
+    </div>
+
+    <div class="modal uploadModal" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Upload File</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="input-group mb-3">
+                        <input type="file" name="file" class="form-control">
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-primary uploadBtn">Upload</button>
+                    <button type="button" class="btn btn-outline-dark closeUploadBtn">Close</button>
+                </div>
             </div>
         </div>
-    </form>
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <script src="/js/upload.js"></script>
+    <script src="/js/member.js"></script>
 </div>
 </body>
 <script layout:fragment="script" th:inline="javascript">
 
     const error = [[${error}]]
 
+    let idChecked = false
+    let nicknameChecked = false
     if(error)
     {
         alert(error);
     }
+    const uploadModal = new bootstrap.Modal(document.querySelector(".uploadModal"))
+    document.querySelector(".setProfileImageBtn").addEventListener("click", function (e){
+        e.preventDefault()
+        e.stopPropagation()
+        uploadModal.show()
+    }, false)
+    document.querySelector(".closeUploadBtn").addEventListener("click", function (e){
+        e.preventDefault()
+        e.stopPropagation()
+        uploadModal.hide()
+    }, false)
+    document.querySelector(".uploadBtn").addEventListener("click", function (e){
+        const formObj = new FormData();
+
+        const fileInput = document.querySelector("input[name='file']")
+
+        console.log(fileInput.files)
+
+        const files = fileInput.files
+
+        for(let i=0; i < files.length; i++)
+        {
+            formObj.append("files", files[i]);
+            console.log(files[i] + " ADDED!")
+        }
+        console.log("Upload Btn Clicked!")
+        uploadToServer(formObj).then(result => {
+            for(const uploadResult of result)
+            {
+                console.log("Show UpLoad!!!!")
+                showUploadFile(uploadResult)
+            }
+            uploadModal.hide()
+        }).catch(e => {
+            console.log("ERROR!")
+            uploadModal.hide()
+        })
+    })
+    const profileImage = document.querySelector(".profileImage")
+    function showUploadFile({uuid, fileName, link})
+    {
+        if(profileImage.querySelector("img").getAttribute("data-src") != null)
+            removeFileToServer(profileImage.querySelector("img").getAttribute("data-src"))
+        console.log(link + "We Have")
+        const str = `<img src="/view/${link}" alt="avatar" data-src="${uuid+"_"+fileName}"
+                                 class="rounded-circle img-fluid profileImage" style="width: 150px;" >`
+        profileImage.innerHTML = str
+    }
+
+
+    document.querySelector(".nicknameUniqueCheckBtn").addEventListener("click", function (e){
+        const nickname = document.getElementsByName('nickname')[0].value
+        const check = "NicknameUniqueCheck"
+        console.log(nickname)
+        isMemberExistByNickname(nickname).then(
+            result =>
+            {
+                if(!result)
+                {
+                    nicknameChecked = true
+                    alert("You can Use This NickName")
+                }
+                else
+                {
+                    nicknameChecked = false
+                    alert("You can't use this NickName, Please Change")
+                }
+            }
+        ).catch(e => alert("ERRRRRRRRRRRRRROR"))
+    })
+    document.querySelector(".memberIDUniqueCheckBtn").addEventListener("click", function (e){
+        const id = document.getElementsByName('memberID')[0].value
+        console.log(id)
+        isMemberExistByID(id).then(
+            result =>
+            {
+                if(!result)
+                {
+                    idChecked = true
+                    alert("You can Use This ID")
+                }
+                else
+                {
+                    idChecked = false;
+                    alert("You can't use this ID, Please Change")
+                }
+            }
+        ).catch(e => alert("ERRRRRRRRRRRRRROR"))
+    })
+
+    document.querySelector('input[name="nickname"]').addEventListener("change", function (e){
+        e.preventDefault()
+        e.stopPropagation()
+        nicknameChecked = false;
+    })
+    document.querySelector('input[name="memberID"]').addEventListener("change", function (e){
+        e.preventDefault()
+        e.stopPropagation()
+        idChecked = false;
+    })
+    document.querySelector(".submitBtn").addEventListener("click", function (e){
+        e.preventDefault()
+        e.stopPropagation()
+        if(!nicknameChecked || !idChecked)
+        {
+            alert("Please Check Your Values")
+            return
+        }
+        const target = document.querySelector(".uploadHidden")
+        const uploadFile = profileImage.querySelector("img")
+        let str = ''
+        const imgLink = uploadFile.getAttribute("data-src")
+        console.log(imgLink)
+        if(imgLink != null) str += `<input type='hidden' name='profileImageName' value="${imgLink}">`
+        target.innerHTML = str;
+        document.getElementById("f1").submit();
+        document.getElementById("f1").reset();
+    }, false)
 </script>
 </html>

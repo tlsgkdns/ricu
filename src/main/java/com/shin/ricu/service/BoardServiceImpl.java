@@ -1,8 +1,9 @@
 package com.shin.ricu.service;
 
 import com.shin.ricu.domain.Board;
-import com.shin.ricu.domain.Comment;
-import com.shin.ricu.dto.*;
+import com.shin.ricu.dto.board.BoardDTO;
+import com.shin.ricu.dto.board.BoardListWithGalleryDTO;
+import com.shin.ricu.dto.board.BoardModifyDTO;
 import com.shin.ricu.dto.page.PageRequestDTO;
 import com.shin.ricu.dto.page.PageResponseDTO;
 import com.shin.ricu.repository.BoardRepository;
@@ -61,7 +62,7 @@ public class BoardServiceImpl implements BoardService{
 
     @Override
     public void removeBoard(Long bno) {
-        boardRepository.getById(bno).deleteBoard();
+        boardRepository.findById(bno).orElseThrow().deleteBoard();
         boardRepository.deleteById(bno);
     }
 
@@ -76,10 +77,15 @@ public class BoardServiceImpl implements BoardService{
 
         boardRepository.save(board);
     }
+    @Override
+    public Long addView(Long bno) {
+        Board board = boardRepository.findById(bno).orElseThrow();
+        return board.addViews();
+    }
 
     @Override
     public BoardModifyDTO readBoardForModify(Long bno) {
-        Board board = boardRepository.getById(bno);
+        Board board = boardRepository.findById(bno).orElseThrow();
         BoardModifyDTO boardModifyDTO = modelMapper.map(board, BoardModifyDTO.class);
         boardModifyDTO.setWriter(board.getWriter().getNickname());
         return boardModifyDTO;
@@ -88,12 +94,14 @@ public class BoardServiceImpl implements BoardService{
     public Board dtoToEntity(BoardDTO boardDTO)
     {
         Board board = Board.builder()
-                .writer(memberRepository.getById(boardDTO.getWriter()))
+                .writer(memberRepository.findById(boardDTO.getWriter()).orElseThrow())
                 .content(boardDTO.getContent())
                 .title(boardDTO.getTitle())
                 .bno(boardDTO.getBno())
-                .gallery(galleryRepository.getById(boardDTO.getGalleryID()))
+                .gallery(galleryRepository.findById(boardDTO.getGalleryID()).orElseThrow())
                 .build();
         return board;
     }
+
+
 }

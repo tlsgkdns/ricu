@@ -36,6 +36,7 @@
             <th scope="col">Board Number</th>
             <th scope="col">Title</th>
             <th scope="col">Writer</th>
+            <th scope="col">View</th>
             <th scope="col">RegDate</th>
           </tr>
           </thead>
@@ -49,6 +50,7 @@
                                 </span>
             </td>
             <td>[[${dto.writer}]]</td>
+            <td>[[${dto.views}]]</td>
             <td>[[${#temporals.format(dto.regDate, 'yyyy-MM-dd')}]]</td>
           </tr>
           </tbody>

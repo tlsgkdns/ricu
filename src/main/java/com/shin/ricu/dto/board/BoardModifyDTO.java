@@ -1,4 +1,4 @@
-package com.shin.ricu.dto;
+package com.shin.ricu.dto.board;
 
 import lombok.*;
 

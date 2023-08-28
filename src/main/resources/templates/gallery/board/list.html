@@ -51,7 +51,7 @@
                  aria-label="Placeholder: 500x500" th:src="|/view/${galleryDTO.galleryImageName}|" preserveAspectRatio="xMidYMid slice" focusable="false"><title>Placeholder</title><rect width="100%" height="100%" fill="var(--bs-secondary-bg)"/></img>
             <div class="my-2">
                 <button type="button" sec:authorize="isAuthenticated()"
-                        th:if="${#authentication.principal.nickname == galleryDTO.manager}" class="btn btn-info">Change Image</button>
+                        th:if="${#authentication.principal.nickname == galleryDTO.manager}" class="btn btn-info editGalleryBtn">Edit Gallery</button>
             </div>
         </div>
 
@@ -112,4 +112,8 @@
     {
         modal.show()
     }
+    document.querySelector(".editGalleryBtn").addEventListener("click", function (e){
+        const galleryID = [[${galleryDTO.galleryID}]]
+        self.location='/gallery/edit?id=' + galleryID
+    })
 </script>

@@ -32,7 +32,7 @@ public class LoginSuccessHandler implements AuthenticationSuccessHandler {
         MemberSecurityDTO memberSecurityDTO = (MemberSecurityDTO)authentication.getPrincipal();
         String prevPage = (String) request.getSession().getAttribute("prevPage");
         log.info("Logined + " + prevPage);
-        if(prevPage == null) redirectStrategy.sendRedirect(request, response,"/member/memberInfo?Member=" + memberSecurityDTO.getMemberID());
+        if(prevPage == null) redirectStrategy.sendRedirect(request, response,"/member/info?Member=" + memberSecurityDTO.getMemberID());
         else redirectStrategy.sendRedirect(request, response, prevPage);
     }
 }

@@ -2,8 +2,10 @@ package com.shin.ricu.domain;
 
 import jakarta.persistence.*;
 import lombok.*;
+import lombok.experimental.SuperBuilder;
 import lombok.extern.log4j.Log4j2;
 import org.hibernate.annotations.BatchSize;
+import org.modelmapper.internal.bytebuddy.implementation.bind.annotation.Super;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -41,5 +43,10 @@ public class Board extends BaseEntity{
     public void deleteBoard()
     {
         writer = null;
+    }
+
+    public Long addViews()
+    {
+        return ++views;
     }
 }

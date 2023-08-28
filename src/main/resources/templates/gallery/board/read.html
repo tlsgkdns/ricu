@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org"
-      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity5"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" xmlns="http://www.w3.org/1999/html"
       layout:decorate="~{layout/basic2.html}">
 <head>
@@ -10,37 +10,24 @@
 <div layout:fragment="content">
     <h1><a class="text-bg-success" th:href="@{/gallery/board/list(id=${galleryDTO.galleryID})}">[[${galleryDTO.title}]] Gallery</a></h1>
     <hr class="featurette-divider">
+    <div class="title">
+        <h1 class="fw-bold">[[${dto.title}]]</h1>
+    </div>
     <div class="card">
         <div class="card-header">
-            Board Read
+            Writer: [[${dto.writer}]]
+            <div class="float-end">
+                [[${#temporals.format(dto.regDate, 'yyyy-MM-dd HH:mm:ss')}]]
+            </div>
         </div>
         <div class="card-body">
-            <div class="input-group mb-3">
-                <span class="input-group-text">Bno</span>
-                <input type="text" class="form-control" th:value="${dto.bno}" readonly>
-            </div>
-            <div class="input-group mb-3">
-                <span class="input-group-text">Title</span>
-                <input type="text" class="form-control" th:value="${dto.title}" readonly>
-            </div>
-            <div class="input-group mb-3">
-                <span class="input-group-text">Content</span>
-                <textarea type="text" class="form-control col-sm-5" rows="5" readonly>[[${dto.content}]]</textarea>
-            </div>
-            <div class="input-group mb-3">
-                <span class="input-group-text">Writer</span>
-                <input type="text" class="form-control" th:value="${dto.writer}" readonly>
-            </div>
-            <!-- <div class="input-group mb-3">
-                <span class="input-group-text">RegDate</span>
-                <input type="text" class="form-control" th:value="${#temporals.format(dto.regDate, 'yyyy-MM-dd HH:mm:ss')}" readonly>
-            </div> -->
+            [[${dto.content}]]
             <div class="my-4" th:with="user=${#authentication.principal}">
                 <div class="float-end" th:with="link = ${pageRequestDTO.getLink()}">
                     <a th:href="|@{/gallery/board/list}?id=${galleryDTO.galleryID}&${link}|" class="text-decoration-none">
                         <button type="button" class="btn btn-primary">List</button>
                     </a>
-                    <a th:if="${user != null && user.class.name != 'java.lang.String' && user.memberID == dto.writer}"
+                    <a sec:authorize="isAuthenticated()" th:if="${user.nickname == dto.writer}"
                        th:href="|@{/gallery/board/modify(id=${galleryDTO.galleryID}, bno=${dto.bno})}&${link}|" class="text-decoration-none">
                         <button type="button" class="btn btn-secondary">Modify</button>
                     </a>
@@ -48,7 +35,8 @@
             </div>
         </div>
     </div>
-    <h2 class="my-3">We have 0 Comments</h2>
+    <h2 class="my-3">We have <span class="commentCnt"></span> Comments</h2>
+    <div class="commentCnt"></div>
     <hr class="featurette-divider">
     <div class="card row mt-3">
         <div class="card-header">
@@ -66,8 +54,9 @@
             <div class="my-4" th:with="user=${#authentication.principal}">
                 <textarea type="text" placeholder="Write Your Comment on the Board"
                           class="form-control col-sm-5 commentText" rows="5"></textarea>
-                <input type="text" class="form-control commentWriter" value="USER" readonly>
-                <button type="submit" class="float-end btn btn-info my-3 addCommentBtn">ADD COMMENT</button>
+                <input type="text" sec:authorize="isAnonymous()" class="form-control commentWriter" value="" readonly>
+                <input type="text" sec:authorize="isAuthenticated()" class="form-control commentWriter" th:value="${user.nickname}" readonly>
+                <button type="submit" sec:authorize="isAuthenticated()" class="float-end btn btn-info my-3 addCommentBtn">ADD COMMENT</button>
             </div>
         </div>
     </div>
@@ -80,6 +69,7 @@
 <script layout:fragment="script" th:inline="javascript">
 
     const bno = [[${dto.bno}]]
+    const userAuth = [[${memberDTO}]]
     const commentList = document.querySelector(".commentList")
     const commentPaging = document.querySelector(".commentPaging")
     function printCommentList(dtoList)
@@ -89,12 +79,26 @@
         {
             for(const comm of dtoList)
             {
-                str += `<li class="list-group-item d-flex commentItem container">
-                    <span class="col-2">${comm.writer}</span>
-                    <span class="col-6" data-rno="${comm.commentID}">${comm.commentText}</span>
-                    <span class="col-3"></span>
-                    <button type="button" class="btn btn-danger" onclick="removeCommentFunction(${comm.commentID})">Delete</button>
-                    </li>`
+                str += `<li class="list-group-item d-flex commentItem container">`
+                if(`${comm.profileImageName}`!= `null`)
+                {
+                    str += `<img src="/view/${comm.profileImageName}" alt="avatar"
+                                class="rounded-circle img-fluid" style="width: 50px; height: 50px">`
+                }else{
+                    str += `<img src="https://mdbcdn.b-cdn.net/img/Photos/new-templates/bootstrap-chat/ava3.webp" alt="avatar"
+                            class="rounded-circle img-fluid" style="width: 50px; height: 50px">`
+                }
+                str += `<span class="col-2 h3">${comm.writer}</span>
+                    <span class="col-6 h2">${comm.commentText}</span>
+                    <span class="col-3"></span>`
+                if(userAuth != null && `${comm.writer}`== userAuth.nickname)
+                    str += `<div>
+                            <button type="button" class="btn btn-danger"
+                                onClick="removeCommentFunction(${comm.commentID})">Delete
+                            </button>
+                            </div>
+                        `
+                str += `</li>`
             }
         }
         commentList.innerHTML = str
@@ -108,7 +112,7 @@
                 alert(id + ' comment deleted')
                 commentText.value=''
                 page = 1
-
+                showCommentCount()
                 printComments(page, size)
             }).catch(e => {
             console.log(e)
@@ -144,23 +148,27 @@
         })
     }
     printComments(1, 10)
-
+    showCommentCount()
     const addCommentBtn = document.querySelector(".addCommentBtn")
     const commentText = document.querySelector(".commentText")
     const commentWriter = document.querySelector(".commentWriter")
-    addCommentBtn.addEventListener("click", function (e){
-        const commentObj = {
-            bno:bno,
-            commentText:commentText.value,
-            writer:commentWriter.value
-        }
-        addComment(commentObj).then(result =>{
-            commentText.value = ''
-            printComments(1, 10, true)
-        }).catch(e =>{
-            alert("Exception.....!")
-        })
-    }, false)
+    if(addCommentBtn != null)
+    {
+        addCommentBtn.addEventListener("click", function (e){
+            const commentObj = {
+                bno:bno,
+                commentText:commentText.value,
+                writer:commentWriter.value
+            }
+            addComment(commentObj).then(result =>{
+                commentText.value = ''
+                printComments(1, 10, true)
+                showCommentCount()
+            }).catch(e =>{
+                alert("Exception.....!")
+            })
+        }, false)
+    }
     let page = 1
     let size = 10
     commentPaging.addEventListener("click", function (e){
@@ -176,5 +184,15 @@
         page = pageNum
         printComments(page, size)
     }, false)
+
+    function showCommentCount()
+    {
+        getCommentCount(bno).then(
+            data => document.getElementsByClassName("commentCnt")[0].innerText = data
+        ).catch(e =>{
+            alert("Exception Alert!!!!!")
+        })
+    }
+
 </script>
 </html>

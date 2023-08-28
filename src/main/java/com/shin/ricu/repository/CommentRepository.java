@@ -12,4 +12,7 @@ public interface CommentRepository extends JpaRepository<Comment, Long> {
 
     @Query("select c from Comment c where c.board.bno = :bno")
     Page<Comment> getCommentListByBoard(Long bno, Pageable pageable);
+
+    @Query("select count(c) from Comment c where c.board.bno = :bno")
+    Long getCommentCount(Long bno);
 }
