@@ -152,7 +152,6 @@
 
     document.querySelector(".nicknameUniqueCheckBtn").addEventListener("click", function (e){
         const nickname = document.getElementsByName('nickname')[0].value
-        const check = "NicknameUniqueCheck"
         console.log(nickname)
         isMemberExistByNickname(nickname).then(
             result =>

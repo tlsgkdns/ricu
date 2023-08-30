@@ -31,7 +31,7 @@ public class BoardTests {
     MemberRepository memberRepository;
     @Autowired
     BoardService boardService;
-    @BeforeEach
+    /*@BeforeEach
     public void insertData()
     {
         boardRepository.deleteAll();
@@ -153,8 +153,7 @@ public class BoardTests {
             log.info(board.getBno() + " is Created!!!!!!!!!!!!!!!!!!!!!!");
             boardRepository.save(board);
         }
-    }
-
+    }*/
     @Test
     public void testBoardSearch()
     {

@@ -15,8 +15,8 @@ public class GalleryListAllDTO
 {
     private String galleryID;
     private String title;
-    private String manager;
     private String explanation;
     private String galleryImageName;
+    private String managerMemberID;
     private LocalDate createDate;
 }

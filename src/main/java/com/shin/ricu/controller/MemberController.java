@@ -6,15 +6,14 @@ import com.shin.ricu.exception.MemberIDExistException;
 import com.shin.ricu.security.dto.MemberSecurityDTO;
 import com.shin.ricu.service.MemberService;
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 @Controller
@@ -25,10 +24,12 @@ public class MemberController {
 
     private final MemberService memberService;
     @GetMapping({"/info", "/edit"})
-    public void userInfo(Model model, @AuthenticationPrincipal MemberSecurityDTO memberSecurityDTO)
+    public String userInfo(Model model, @AuthenticationPrincipal MemberSecurityDTO memberSecurityDTO, HttpServletRequest request)
     {
+        if(memberSecurityDTO == null) return "redirect:/member/login";
         MemberDTO memberDTO = memberService.getMember(memberSecurityDTO.getMemberID());
         model.addAttribute("memberDTO", memberDTO);
+        return request.getRequestURI();
     }
 
     @GetMapping("/register")
@@ -52,10 +53,9 @@ public class MemberController {
     }
 
     @GetMapping(value = {"/login", "/", ""})
-    public void login(Model model, @RequestParam(required = false)String error, HttpServletRequest request)
+    public void login(Model model, HttpServletRequest request)
     {
         request.getSession().setAttribute("prevPage", request.getHeader("Referer"));
-        model.addAttribute("error", error);
     }
     @PostMapping("/login")
     public void loginCheck()

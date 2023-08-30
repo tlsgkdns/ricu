@@ -9,6 +9,9 @@ import org.springframework.security.authentication.InternalAuthenticationService
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.web.authentication.AuthenticationFailureHandler;
+import org.springframework.web.servlet.FlashMap;
+import org.springframework.web.servlet.FlashMapManager;
+import org.springframework.web.servlet.support.SessionFlashMapManager;
 
 import java.io.IOException;
 
@@ -30,6 +33,10 @@ public class LoginFailureHandler implements AuthenticationFailureHandler {
         } else {
             errorMessage = "Unknown Error";
         }
-        response.sendRedirect("/member/login?error="+errorMessage);
+        FlashMap flashMap = new FlashMap();
+        flashMap.put("error", errorMessage);
+        FlashMapManager flashMapManager = new SessionFlashMapManager();
+        flashMapManager.saveOutputFlashMap(flashMap, request, response);
+        response.sendRedirect("/member/login");
     }
 }

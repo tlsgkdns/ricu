@@ -162,9 +162,10 @@
       <div class="text-end">
         <button sec:authorize="isAnonymous()" type="button" class="btn btn-outline-light me-2 loginBtn">Login</button>
         <button sec:authorize="isAnonymous()" type="button" class="btn btn-warning registerBtn">Register</button>
-        <form th:action="@{/member/logout}" method="post">
-          <button sec:authorize="isAuthenticated()" type="submit" class="btn btn-bd-primary logOutBtn">Logout</button>
-        </form>
+        <button sec:authorize="isAuthenticated()" type="button" class="btn btn-bd-primary logOutBtn">Logout</button>
+        <button sec:authorize="isAuthenticated()" type="button" class="btn btn-success infoBtn">Info</button>
+        <form th:action="@{/member/logout}" method="post" id="logoutForm"></form>
+        <form th:action="@{/member/info}" method="get" id="infoForm"></form>
       </div>
     </div>
   </div>
@@ -200,8 +201,18 @@
       self.location = '/member/register'
     })
   }
-
-
-
+  else
+  {
+    document.querySelector(".logOutBtn").addEventListener("click",function (e){
+      e.preventDefault()
+      e.stopPropagation()
+      document.querySelector("#logoutForm").submit();
+    })
+    document.querySelector(".infoBtn").addEventListener("click",function (e){
+      e.preventDefault()
+      e.stopPropagation()
+      document.querySelector("#infoForm").submit();
+    })
+  }
 </script>
 </html>

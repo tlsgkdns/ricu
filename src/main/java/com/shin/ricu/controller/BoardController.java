@@ -34,6 +34,7 @@ public class BoardController {
     @ModelAttribute("galleryDTO")
     public GalleryDTO galleryDTO(@RequestParam String id)
     {
+        log.info(galleryService.getGalleryDTO(id).getGalleryImageName());
         return galleryService.getGalleryDTO(id);
     }
     @GetMapping("/list")

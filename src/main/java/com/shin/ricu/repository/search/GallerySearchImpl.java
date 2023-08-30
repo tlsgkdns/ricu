@@ -30,7 +30,7 @@ public class GallerySearchImpl extends QuerydslRepositorySupport implements Gall
         JPQLQuery<GalleryListAllDTO> dtoQuery = query.select(Projections.bean(GalleryListAllDTO.class,
                 gallery.galleryID,
                 gallery.title,
-                gallery.manager,
+                gallery.manager.memberID.as("managerMemberID"),
                 gallery.regDate
         ));
         List<GalleryListAllDTO> list = dtoQuery.fetch();

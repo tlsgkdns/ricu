@@ -13,7 +13,8 @@ public class GalleryDTO
 {
     private String galleryID;
     private String title;
-    private String manager;
+    private String managerID;
+    private String managerNickname;
     private String explanation;
     private String galleryImageName;
 }

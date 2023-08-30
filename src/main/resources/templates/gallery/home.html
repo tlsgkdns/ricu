@@ -45,7 +45,7 @@
                                     </form>
                                     <form th:action="|@{/gallery/edit}|" method="get">
                                         <input type="hidden" name="id" th:value="${dto.galleryID}">
-                                        <button type="submit" sec:authorize="isAuthenticated()" th:if="${#authentication.principal.nickname == dto.manager}"
+                                        <button type="submit" sec:authorize="isAuthenticated()" th:if="${#authentication.principal.memberID == dto.managerMemberID}"
                                                 class="btn btn-sm btn-outline-secondary">Edit</button>
                                     </form>
 

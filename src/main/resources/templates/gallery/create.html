@@ -17,10 +17,12 @@
                 <div class="input-group mb-3">
                     <span class="input-group-text">UrlName</span>
                     <input type="text" class="form-control" name="galleryID" placeholder="urlName">
+                    <button type="button" class="btn btn-info urlUniqueCheckBtn">Unique Check</button>
                 </div>
                 <div class="input-group mb-3">
                     <span class="input-group-text">Title</span>
                     <input type="text" class="form-control" name="title" placeholder="Title">
+                    <button type="button" class="btn btn-info titleUniqueCheckBtn">Unique Check</button>
                 </div>
                 <div class="input-group mb-3">
                     <span class="input-group-text">Manager</span>
@@ -75,13 +77,14 @@
 
     <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
     <script src="/js/upload.js"></script>
+    <script src="/js/gallery.js"></script>
 </div>
 </body>
 
 <script layout:fragment="script" th:inline="javascript">
 
     const errors = [[${errors}]]
-    console.log(errors)
+    const error = [[${error}]]
 
     let errorMsg = ''
     if(errors)
@@ -89,6 +92,10 @@
         for(let i=0; i < errors.length; i++)
             errorMsg += `${errors[i].field} is ${errors[i].code}\n`
         alert(errorMsg)
+    }
+    if(error)
+    {
+        alert(error)
     }
 
     const uploadModal = new bootstrap.Modal(document.querySelector(".uploadModal"))
@@ -151,10 +158,73 @@
         })
     }
 
+    let urlCheck = false
+    let titleCheck = false
+    document.querySelector(".urlUniqueCheckBtn").addEventListener("click", function (e){
+        e.preventDefault()
+        e.stopPropagation()
+
+        const urlname = document.getElementsByName('galleryID')[0].value
+        isGalleryExistByURL(urlname).then(
+            result =>
+            {
+                if(!result)
+                {
+                    urlCheck = true
+                    alert("You can Use This URL")
+                }
+                else
+                {
+                    urlCheck = false
+                    alert("You can't use this URL, Please Change")
+                }
+            }
+        ).catch(e => alert("ERRRRRRRRRRRRRROR"))
+    })
+
+    document.querySelector(".titleUniqueCheckBtn").addEventListener("click", function (e){
+        e.preventDefault()
+        e.stopPropagation()
+
+        const title = document.getElementsByName('title')[0].value
+        console.log(title)
+        isGalleryExistByTitle(title).then(
+            result =>
+            {
+                if(!result)
+                {
+                    titleCheck = true
+                    alert("You can Use This Title")
+                }
+                else
+                {
+                    titleCheck = false
+                    alert("You can't use this Title, Please Change")
+                }
+            }
+        )
+    })
+
+    document.querySelector('input[name="galleryID"]').addEventListener("change", function (e){
+        e.preventDefault()
+        e.stopPropagation()
+        urlCheck = false;
+    })
+    document.querySelector('input[name="title"]').addEventListener("change", function (e){
+        e.preventDefault()
+        e.stopPropagation()
+        titleCheck = false;
+    })
+
     document.querySelector(".submitBtn").addEventListener("click", function (e){
         e.preventDefault()
         e.stopPropagation()
 
+        if(!urlCheck || !titleCheck)
+        {
+            alert("Check Your Values")
+            return
+        }
         const target = document.querySelector(".uploadHidden")
 
         const uploadFiles = uploadResult.querySelectorAll("img")
@@ -173,4 +243,7 @@
         document.querySelector("#f1").submit();
         document.querySelector("#f1").reset();
     }, false)
+
+
+
 </script>

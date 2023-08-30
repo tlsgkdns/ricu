@@ -47,6 +47,7 @@
                 </div>
                 <div class="col-sm-9">
                   <input type="text" class="text-muted mb-0" name="nickname" th:value="${memberDTO.nickname}">
+                  <button type="button" class="btn btn-info nicknameUniqueCheckBtn">Unique Check</button>
                 </div>
               </div>
               <hr>
@@ -56,6 +57,7 @@
                 </div>
                 <div class="col-sm-9">
                   <input type="text" class="text-muted mb-0" name="email" th:value="${memberDTO.email}">
+
                 </div>
               </div>
               <hr>
@@ -101,11 +103,47 @@
   </div>
   <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
   <script src="/js/upload.js"></script>
+  <script src="/js/member.js"></script>
 </div>
 <script layout:fragment="script" th:inline="javascript">
 
   const error = [[${error}]]
 
+  let nicknameChecked = true
+  document.querySelector("input[name='nickname']").addEventListener("change", function (e){
+    e.stopPropagation()
+    e.preventDefault()
+    nicknameChecked = false;
+  })
+
+  document.querySelector(".nicknameUniqueCheckBtn").addEventListener("click",function (e){
+    const nickname = document.getElementsByName('nickname')[0].value
+    if(nickname === [[${memberDTO.nickname}]])
+    {
+      console.log("Same!")
+      nicknameChecked = true
+      alert("You can Use This NickName")
+    }
+    else
+    {
+      isMemberExistByNickname(nickname).then(
+              result =>
+              {
+                if(!result)
+                {
+                  nicknameChecked = true
+                  alert("You can Use This NickName")
+                }
+                else
+                {
+                  nicknameChecked = false
+                  alert("You can't use this NickName, Please Change")
+                }
+              }
+      ).catch(e => alert("ERRRRRRRRRRRRRROR"))
+    }
+
+  })
   if(error)
   {
     alert(error);
@@ -162,6 +200,11 @@
   document.querySelector(".submitBtn").addEventListener("click", function (e){
     e.preventDefault()
     e.stopPropagation()
+    if(!nicknameChecked)
+    {
+      alert("Please Check Unique Nickname")
+      return
+    }
     const target = document.querySelector(".uploadHidden")
     const uploadFile = profileImage.querySelector("img")
     let str = ''
