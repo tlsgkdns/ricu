@@ -1,6 +1,7 @@
 package com.shin.ricu.controller;
 
-import com.shin.ricu.dto.board.BoardListWithGalleryDTO;
+import com.shin.ricu.dto.board.BoardDTOForMembers;
+import com.shin.ricu.dto.board.BoardDTOForWriter;
 import com.shin.ricu.dto.page.PageRequestDTO;
 import com.shin.ricu.dto.page.PageResponseDTO;
 import com.shin.ricu.service.BoardService;
@@ -24,7 +25,7 @@ public class MainController {
     @GetMapping("/hello")
     public void hello(Model model, @RequestParam String id, PageRequestDTO pageRequestDTO)
     {
-        PageResponseDTO<BoardListWithGalleryDTO> responseDTO = boardService.getBoardListWithGallery(pageRequestDTO, id
+        PageResponseDTO<BoardDTOForMembers> responseDTO = boardService.getBoardListWithGallery(pageRequestDTO, id
                 , pageRequestDTO.getType(), pageRequestDTO.getKeyword());
         model.addAttribute("responseDTO", responseDTO);
         model.addAttribute("galleryDTO", galleryService.getGalleryDTO(id));

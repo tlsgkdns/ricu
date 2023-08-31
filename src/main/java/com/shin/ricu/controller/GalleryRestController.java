@@ -1,6 +1,8 @@
 package com.shin.ricu.controller;
 
 
+import com.shin.ricu.dto.board.BoardDTOForMembers;
+import com.shin.ricu.dto.page.PageResponseDTO;
 import com.shin.ricu.service.GalleryService;
 import com.shin.ricu.service.MemberService;
 import lombok.RequiredArgsConstructor;

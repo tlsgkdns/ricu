@@ -4,11 +4,14 @@ import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
 import lombok.extern.log4j.Log4j2;
+import org.codehaus.groovy.tools.gse.StringSetMap;
 import org.hibernate.annotations.BatchSize;
 import org.modelmapper.internal.bytebuddy.implementation.bind.annotation.Super;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @Entity
 @Getter
@@ -31,7 +34,8 @@ public class Board extends BaseEntity{
     @JoinColumn(name = "gallery_id", referencedColumnName = "galleryID")
     private Gallery gallery;
     @Builder.Default
-    private Long likeThisBoard = 0L;
+    @ElementCollection(targetClass=String.class)
+    private Set<String> likeMembers = new HashSet<>();
     @Builder.Default
     private Long views = 0L;
 
@@ -48,5 +52,15 @@ public class Board extends BaseEntity{
     public Long addViews()
     {
         return ++views;
+    }
+
+    public void addLikeMember(String memberID)
+    {
+        likeMembers.add(memberID);
+    }
+
+    public void removeLike(String memberID)
+    {
+        likeMembers.remove(memberID);
     }
 }

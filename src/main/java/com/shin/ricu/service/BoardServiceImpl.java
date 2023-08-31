@@ -1,9 +1,8 @@
 package com.shin.ricu.service;
 
 import com.shin.ricu.domain.Board;
-import com.shin.ricu.dto.board.BoardDTO;
-import com.shin.ricu.dto.board.BoardListWithGalleryDTO;
-import com.shin.ricu.dto.board.BoardModifyDTO;
+import com.shin.ricu.dto.board.BoardDTOForMembers;
+import com.shin.ricu.dto.board.BoardDTOForWriter;
 import com.shin.ricu.dto.page.PageRequestDTO;
 import com.shin.ricu.dto.page.PageResponseDTO;
 import com.shin.ricu.repository.BoardRepository;
@@ -28,21 +27,27 @@ public class BoardServiceImpl implements BoardService{
     private final GalleryRepository galleryRepository;
     private final ModelMapper modelMapper;
     @Override
-    public Long writeBoard(BoardDTO boardDTO)
+    public Long writeBoard(BoardDTOForWriter boardDTOForWriter)
     {
-        log.info(boardDTO + "saved!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
-        Board board = dtoToEntity(boardDTO);
+        log.info(boardDTOForWriter + "saved!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
+        Board board = Board.builder()
+                .writer(memberRepository.findById(boardDTOForWriter.getWriter()).orElseThrow())
+                .content(boardDTOForWriter.getContent())
+                .title(boardDTOForWriter.getTitle())
+                .bno(boardDTOForWriter.getBno())
+                .gallery(galleryRepository.findById(boardDTOForWriter.getGalleryID()).orElseThrow())
+                .build();
         log.info("Writing Board " + board + "..............................................");
         boardRepository.save(board);
         return board.getBno();
     }
 
     @Override
-    public PageResponseDTO<BoardListWithGalleryDTO> getBoardListWithGallery(PageRequestDTO pageRequestDTO, String galleryID, String types, String keyword)
+    public PageResponseDTO<BoardDTOForMembers> getBoardListWithGallery(PageRequestDTO pageRequestDTO, String galleryID, String types, String keyword)
     {
-        Page<BoardListWithGalleryDTO> list = boardRepository.searchBoard(pageRequestDTO.getPageable("bno"), galleryID, types, keyword);
+        Page<BoardDTOForMembers> list = boardRepository.searchBoard(pageRequestDTO.getPageable("bno"), galleryID, types, keyword);
 
-        return PageResponseDTO.<BoardListWithGalleryDTO>withAll()
+        return PageResponseDTO.<BoardDTOForMembers>withAll()
                 .dtoList(list.getContent())
                 .pageRequestDTO(pageRequestDTO)
                 .total((int)list.getTotalElements())
@@ -51,13 +56,13 @@ public class BoardServiceImpl implements BoardService{
 
     @Transactional
     @Override
-    public BoardDTO readBoard(Long bno)
+    public BoardDTOForMembers readBoard(Long bno)
     {
         Optional<Board> optionalBoard = boardRepository.findById(bno);
         Board board = optionalBoard.orElseThrow();
-        BoardDTO boardDTO = modelMapper.map(board, BoardDTO.class);
-        boardDTO.setWriter(board.getWriter().getNickname());
-        return boardDTO;
+        BoardDTOForMembers boardDTOForMembers = boardMemberDTOToBoard(board);
+        boardDTOForMembers.setWriter(board.getWriter().getNickname());
+        return boardDTOForMembers;
     }
 
     @Override
@@ -67,14 +72,11 @@ public class BoardServiceImpl implements BoardService{
     }
 
     @Override
-    public void modifyBoard(BoardDTO boardDTO) {
+    public void modifyBoard(BoardDTOForWriter boardDTOForWriter) {
 
-        Optional<Board> result = boardRepository.findById(boardDTO.getBno());
-
+        Optional<Board> result = boardRepository.findById(boardDTOForWriter.getBno());
         Board board = result.orElseThrow();
-
-        board.modifyBoard(boardDTO.getTitle(), boardDTO.getContent());
-
+        board.modifyBoard(boardDTOForWriter.getTitle(), boardDTOForWriter.getContent());
         boardRepository.save(board);
     }
     @Override
@@ -84,24 +86,49 @@ public class BoardServiceImpl implements BoardService{
     }
 
     @Override
-    public BoardModifyDTO readBoardForModify(Long bno) {
+    public BoardDTOForWriter readBoardForModify(Long bno) {
         Board board = boardRepository.findById(bno).orElseThrow();
-        BoardModifyDTO boardModifyDTO = modelMapper.map(board, BoardModifyDTO.class);
-        boardModifyDTO.setWriter(board.getWriter().getNickname());
-        return boardModifyDTO;
+        BoardDTOForWriter boardDTOForWriter = modelMapper.map(board, BoardDTOForWriter.class);
+        boardDTOForWriter.setWriter(board.getWriter().getNickname());
+        return boardDTOForWriter;
     }
 
-    public Board dtoToEntity(BoardDTO boardDTO)
+    @Override
+    public Long addLike(Long bno, String memberID) {
+        Board board = boardRepository.findById(bno).orElseThrow();
+        log.info("Is Exist " + memberID);
+        if(board.getLikeMembers().contains(memberID)) return -1L;
+        log.info("We are now insert Like " + memberID);
+        board.addLikeMember(memberID);
+        log.info(board.getLikeMembers().size() + " Size!!!!!!!!!");
+        boardRepository.save(board);
+        return Long.valueOf(board.getLikeMembers().size());
+    }
+
+    @Override
+    public Long removeLike(Long bno, String memberID) {
+        Board board = boardRepository.findById(bno).orElseThrow();
+        log.info("Canceling Like... " + memberID);
+        if(!board.getLikeMembers().contains(memberID)) return -1L;
+        board.removeLike(memberID);
+        log.info(board.getLikeMembers().size() + "In NOW!");
+        boardRepository.save(board);
+        return Long.valueOf(board.getLikeMembers().size());
+    }
+
+    public BoardDTOForMembers boardMemberDTOToBoard(Board board)
     {
-        Board board = Board.builder()
-                .writer(memberRepository.findById(boardDTO.getWriter()).orElseThrow())
-                .content(boardDTO.getContent())
-                .title(boardDTO.getTitle())
-                .bno(boardDTO.getBno())
-                .gallery(galleryRepository.findById(boardDTO.getGalleryID()).orElseThrow())
+        BoardDTOForMembers dto = BoardDTOForMembers.builder()
+                .title(board.getTitle())
+                .views(board.getViews())
+                .writer(board.getWriter().getNickname())
+                .likeCount(Long.valueOf(board.getLikeMembers().size()))
+                .content(board.getContent())
+                .bno(board.getBno())
+                .galleryID(board.getGallery().getGalleryID())
+                .regDate(board.getRegDate())
                 .build();
-        return board;
+
+        return dto;
     }
-
-
 }

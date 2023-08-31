@@ -8,15 +8,25 @@
     <section class="py-5 text-center container">
         <div class="row py-lg-5">
             <div class="col-lg-6 col-md-8 mx-auto">
-                <h1 class="fw-light">Album example</h1>
-                <p class="lead text-body-secondary">Something short and leading about the collection below—its contents, the creator, etc. Make it short and sweet, but not too short so folks don’t simply skip over it entirely.</p>
+                <h1 class="fw-light">Welcome to RICU!</h1>
+                <p class="lead text-body-secondary">We are here to share our information and talke about your Interstesting, Search Your Gallery And tell your opinion</p>
                 <form class="col-12 col-lg-auto mb-3 mb-lg-0 me-lg-3" role="search", action="/gallery/home" method="get" id="f1">
                     <input type="search" class="form-control form-control-dark text-bg-white"
                            name="keyword" placeholder="Search Your Gallery" aria-label="Search" th:value="${pageRequestDTO.keyword}">
-                    <p class="py-2">
+                    <div id="dropdownContent">
+                        <ul class="dropdown-menu position-static d-grid gap-1 p-2 rounded-3 mx-0 shadow w-220px" data-bs-theme="light">
+                            <li><a class="dropdown-item rounded-2 active" href="#">Action</a></li>
+                            <li><a class="dropdown-item rounded-2" href="#">Another action</a></li>
+                            <li><a class="dropdown-item rounded-2" href="#">Something else here</a></li>
+                            <li><hr class="dropdown-divider"></li>
+                            <li><a class="dropdown-item rounded-2" href="#">Separated link</a></li>
+                        </ul>
+                    </div>
+                    <div class="py-2">
                         <button type="submit" class="btn btn-primary my-2 searchBtn">Search Gallery</button>
                         <button type="button" class="btn btn-secondary my-2 clearBtn">Clear</button>
-                    </p>
+
+                    </div>
                 </form>
             </div>
         </div>
@@ -117,6 +127,10 @@
     document.querySelector(".clearBtn").addEventListener("click", function (e){
         e.preventDefault()
         e.stopPropagation()
-        self.location = '/gallery/home'
+        if(document.getElementById("dropdownContent").style.display === "none")
+            document.getElementById("dropdownContent").style.display = "inline"
+        else
+            document.getElementById("dropdownContent").style.display = "none"
     }, false)
+
 </script>

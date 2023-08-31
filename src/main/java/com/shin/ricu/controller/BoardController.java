@@ -1,14 +1,12 @@
 package com.shin.ricu.controller;
 
-import com.shin.ricu.dto.board.BoardDTO;
-import com.shin.ricu.dto.board.BoardListWithGalleryDTO;
-import com.shin.ricu.dto.board.BoardModifyDTO;
+import com.shin.ricu.dto.board.BoardDTOForMembers;
+import com.shin.ricu.dto.board.BoardDTOForWriter;
 import com.shin.ricu.dto.gallery.GalleryDTO;
 import com.shin.ricu.dto.page.PageRequestDTO;
 import com.shin.ricu.dto.page.PageResponseDTO;
 import com.shin.ricu.security.dto.MemberSecurityDTO;
 import com.shin.ricu.service.BoardService;
-import com.shin.ricu.service.CommentService;
 import com.shin.ricu.service.GalleryService;
 import com.shin.ricu.service.MemberService;
 import jakarta.validation.Valid;
@@ -41,7 +39,7 @@ public class BoardController {
     public void boardList(PageRequestDTO pageRequestDTO, Model model, @RequestParam String id)
     {
         log.info(pageRequestDTO);
-        PageResponseDTO<BoardListWithGalleryDTO> responseDTO = boardService.getBoardListWithGallery(pageRequestDTO, id
+        PageResponseDTO<BoardDTOForMembers> responseDTO = boardService.getBoardListWithGallery(pageRequestDTO, id
                 , pageRequestDTO.getType(), pageRequestDTO.getKeyword());
         log.info(responseDTO);
         model.addAttribute("responseDTO", responseDTO);
@@ -53,7 +51,7 @@ public class BoardController {
         model.addAttribute("member", member);
     }
     @PostMapping("/write")
-    public String writeBoard(@Valid BoardDTO boardDTO, BindingResult bindingResult,
+    public String writeBoard(@Valid BoardDTOForWriter boardDTOForWriter, BindingResult bindingResult,
                              RedirectAttributes redirectAttributes)
     {
         log.info("board POST register.........");
@@ -62,12 +60,12 @@ public class BoardController {
         {
             log.info("has error.............");
             redirectAttributes.addFlashAttribute("errors", bindingResult.getAllErrors());
-            redirectAttributes.addAttribute("id", boardDTO.getGalleryID());
+            redirectAttributes.addAttribute("id", boardDTOForWriter.getGalleryID());
             return "redirect:/gallery/board/write";
         }
-        log.info(boardDTO);
-        Long bno = boardService.writeBoard(boardDTO);
-        redirectAttributes.addAttribute("id", boardDTO.getGalleryID());
+        log.info(boardDTOForWriter);
+        Long bno = boardService.writeBoard(boardDTOForWriter);
+        redirectAttributes.addAttribute("id", boardDTOForWriter.getGalleryID());
         return "redirect:/gallery/board/list";
     }
 
@@ -75,55 +73,63 @@ public class BoardController {
     public void readBoard(Model model, Long bno, PageRequestDTO pageRequestDTO
             ,@AuthenticationPrincipal MemberSecurityDTO memberSecurityDTO)
     {
-        BoardDTO boardDTO = boardService.readBoard(bno);
-        if(memberSecurityDTO == null || !memberSecurityDTO.getNickname().equals(boardDTO.getWriter()))
+        BoardDTOForMembers boardDTOForMembers = boardService.readBoard(bno);
+        if(memberSecurityDTO == null || !memberSecurityDTO.getNickname().equals(boardDTOForMembers.getWriter()))
             boardService.addView(bno);
-        log.info(boardDTO);
-        PageResponseDTO<BoardListWithGalleryDTO> responseDTO = boardService.getBoardListWithGallery(pageRequestDTO, boardDTO.getGalleryID()
+        log.info(boardDTOForMembers);
+        PageResponseDTO<BoardDTOForMembers> responseDTO = boardService.getBoardListWithGallery(pageRequestDTO, boardDTOForMembers.getGalleryID()
                 , pageRequestDTO.getType(), pageRequestDTO.getKeyword());
         model.addAttribute("responseDTO", responseDTO);
-        model.addAttribute("dto", boardDTO);
+        model.addAttribute("dto", boardDTOForMembers);
         if(memberSecurityDTO != null) model.addAttribute("memberDTO", memberService.getMember(memberSecurityDTO.getMemberID()));
     }
 
     @GetMapping("/modify")
     public void modifyBoard(Model model, Long bno, PageRequestDTO pageRequestDTO)
     {
-        BoardModifyDTO boardDTO = boardService.readBoardForModify(bno);
+        BoardDTOForWriter boardDTO = boardService.readBoardForModify(bno);
         log.info(boardDTO);
         model.addAttribute("dto", boardDTO);
         model.addAttribute("galleryDTO", galleryService.getGalleryDTO(boardDTO.getGalleryID()));
     }
     @PostMapping("/remove")
-    public String remove(BoardDTO boardDTO, RedirectAttributes redirectAttributes)
+    public String remove(@RequestParam String id, Long bno, RedirectAttributes redirectAttributes)
     {
-        String galleryID = boardDTO.getGalleryID();
-        Long bno = boardDTO.getBno();
-        log.info("remove post.." + bno + " " + galleryID);
+        log.info("remove post.." + bno + " " + id);
         boardService.removeBoard(bno);
         redirectAttributes.addFlashAttribute("result", "removed");
-        redirectAttributes.addAttribute("id", galleryID);
+        redirectAttributes.addAttribute("id", id);
         return "redirect:/gallery/board/list";
     }
 
     @PostMapping("/modify")
     public String modify(PageRequestDTO pageRequestDTO,
-                         @Valid BoardDTO boardDTO, BindingResult bindingResult,
+                         @Valid BoardDTOForWriter boardDTOForWriter, BindingResult bindingResult,
                          RedirectAttributes redirectAttributes)
     {
-        log.info("board modify post........." + boardDTO);
+        log.info("board modify post........." + boardDTOForWriter);
         if(bindingResult.hasErrors())
         {
             log.info("has error.............");
             String link = pageRequestDTO.getLink();
             redirectAttributes.addFlashAttribute("errors", bindingResult.getAllErrors());
-            redirectAttributes.addAttribute("bno", boardDTO.getBno());
+            redirectAttributes.addAttribute("bno", boardDTOForWriter.getBno());
             return "redirect:/gallery/board/modify?" + link;
         }
-        boardService.modifyBoard(boardDTO);
+        boardService.modifyBoard(boardDTOForWriter);
         redirectAttributes.addFlashAttribute("result", "modified");
-        redirectAttributes.addAttribute("id", boardDTO.getGalleryID());
-        redirectAttributes.addAttribute("bno", boardDTO.getBno());
+        redirectAttributes.addAttribute("id", boardDTOForWriter.getGalleryID());
+        redirectAttributes.addAttribute("bno", boardDTOForWriter.getBno());
+        return "redirect:/gallery/board/read";
+    }
+
+    @PostMapping("/like")
+    public String addLike(RedirectAttributes redirectAttributes, String gid, Long bno,
+                          @AuthenticationPrincipal MemberSecurityDTO memberSecurityDTO)
+    {
+        redirectAttributes.addAttribute("id", gid);
+        redirectAttributes.addAttribute("bno", bno);
+
         return "redirect:/gallery/board/read";
     }
 }

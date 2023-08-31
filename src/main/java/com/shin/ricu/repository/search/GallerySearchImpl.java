@@ -1,5 +1,6 @@
 package com.shin.ricu.repository.search;
 
+import com.querydsl.core.BooleanBuilder;
 import com.querydsl.core.types.Projections;
 import com.querydsl.jpa.JPQLQuery;
 import com.shin.ricu.domain.Gallery;
@@ -22,11 +23,14 @@ public class GallerySearchImpl extends QuerydslRepositorySupport implements Gall
         JPQLQuery<Gallery> query = from(gallery);
         if(keyword != null && keyword.length() > 0)
         {
-            query.where(gallery.title.contains(keyword));
-            query.where(gallery.explanation.contains(keyword));
+            BooleanBuilder builder = new BooleanBuilder();
+            builder.or(gallery.title.contains(keyword));
+            builder.or(gallery.explanation.contains(keyword));
+            query.where(builder);
         }
         getQuerydsl().applyPagination(pageable, query);
         List<Gallery> galleries = query.fetch();
+        log.info(galleries.size() + " galleries......................");
         JPQLQuery<GalleryListAllDTO> dtoQuery = query.select(Projections.bean(GalleryListAllDTO.class,
                 gallery.galleryID,
                 gallery.title,

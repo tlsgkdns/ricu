@@ -2,6 +2,8 @@ package com.shin.ricu.dto;
 
 import lombok.*;
 
+import java.time.LocalDateTime;
+
 @Data
 @Builder
 @AllArgsConstructor
@@ -13,4 +15,5 @@ public class CommentDTO {
     private String commentText;
     private String writer;
     private String profileImageName;
+    private LocalDateTime regDate;
 }

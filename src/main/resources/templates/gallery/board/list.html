@@ -58,7 +58,7 @@
     </div>
     </div>
     <hr class="featurette-divider">
-    <div class="row mt-3" th:insert="~{/fragment/boardListFragment::boardList(${galleryDTO.galleryID}, ${responseDTO})}">
+    <div class="row mt-3" th:insert="~{/fragment/boardListFragment::boardList(${galleryDTO.galleryID}, ${responseDTO}, null)}">
     </div>
     <div class="col-md-1 my-5">
         <form th:action="@{/gallery/board/write}" method="get">
@@ -112,10 +112,13 @@
     {
         modal.show()
     }
-    document.querySelector(".editGalleryBtn").addEventListener("click", function (e){
-        const galleryID = [[${galleryDTO.galleryID}]]
-        self.location='/gallery/edit?id=' + galleryID
-    })
+    if(document.querySelector(".editGalleryBtn") != null)
+    {
+        document.querySelector(".editGalleryBtn").addEventListener("click", function (e){
+            const galleryID = [[${galleryDTO.galleryID}]]
+            self.location='/gallery/edit?id=' + galleryID
+        })
+    }
 
     document.querySelector(".closeUploadBtn").addEventListener("click", function (e){
         modal.hide()

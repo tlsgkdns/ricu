@@ -1,17 +1,13 @@
 package com.shin.ricu;
 
-import com.shin.ricu.domain.Board;
-import com.shin.ricu.domain.Gallery;
-import com.shin.ricu.domain.Member;
-import com.shin.ricu.dto.board.BoardListWithGalleryDTO;
 import com.shin.ricu.dto.CommentDTO;
+import com.shin.ricu.dto.board.BoardDTOForMembers;
 import com.shin.ricu.dto.page.PageRequestDTO;
 import com.shin.ricu.repository.BoardRepository;
 import com.shin.ricu.repository.GalleryRepository;
 import com.shin.ricu.repository.MemberRepository;
 import com.shin.ricu.service.BoardService;
 import lombok.extern.log4j.Log4j2;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -158,8 +154,8 @@ public class BoardTests {
     public void testBoardSearch()
     {
         PageRequestDTO pageRequestDTO = new PageRequestDTO();
-        Page<BoardListWithGalleryDTO> list = boardRepository.searchBoard(pageRequestDTO.getPageable("bno"), "winter", "", "");
-        List<BoardListWithGalleryDTO> boardList = list.getContent().stream().toList();
+        Page<BoardDTOForMembers> list = boardRepository.searchBoard(pageRequestDTO.getPageable("bno"), "winter", "", "");
+        List<BoardDTOForMembers> boardList = list.getContent().stream().toList();
         log.info(boardList.size() + " is Here!!!!!!!!!!!!!!!!!!!!!!");
         for(int i=0; i < boardList.size(); i++) log.info(boardList.get(i));
     }
