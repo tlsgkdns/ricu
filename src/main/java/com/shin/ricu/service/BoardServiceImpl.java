@@ -14,6 +14,7 @@ import org.modelmapper.ModelMapper;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.Optional;
 
@@ -43,9 +44,11 @@ public class BoardServiceImpl implements BoardService{
     }
 
     @Override
-    public PageResponseDTO<BoardDTOForMembers> getBoardListWithGallery(PageRequestDTO pageRequestDTO, String galleryID, String types, String keyword)
+    public PageResponseDTO<BoardDTOForMembers> getBoardListWithGallery(PageRequestDTO pageRequestDTO, String galleryID
+            , String types, String keyword, String mode)
     {
-        Page<BoardDTOForMembers> list = boardRepository.searchBoard(pageRequestDTO.getPageable("bno"), galleryID, types, keyword);
+        Page<BoardDTOForMembers> list = boardRepository.searchBoard(pageRequestDTO.getPageable("bno")
+                , galleryID, types, keyword, mode != null && mode.equals("Popular"));
 
         return PageResponseDTO.<BoardDTOForMembers>withAll()
                 .dtoList(list.getContent())

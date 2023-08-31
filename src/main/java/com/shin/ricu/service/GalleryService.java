@@ -8,6 +8,7 @@ import com.shin.ricu.dto.page.PageRequestDTO;
 import com.shin.ricu.dto.page.PageResponseDTO;
 import com.shin.ricu.exception.GalleryIDExistException;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 public interface GalleryService {
@@ -26,4 +27,6 @@ public interface GalleryService {
     public boolean isExistByURL(String url);
 
     public boolean isExistByTitle(String title);
+
+    public void setGalleryModifiedDate(String id, LocalDateTime localDateTime);
 }

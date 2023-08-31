@@ -16,6 +16,7 @@ import org.modelmapper.ModelMapper;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -79,8 +80,8 @@ public class GalleryServiceImpl implements GalleryService{
         if(galleryDTO.getGalleryImageName() != null)
         {
             String[] fileName = galleryDTO.getGalleryImageName().split("_");
-            log.info(fileName[0]);
-            gallery.setImage(fileName[0], fileName[1]);
+            if(fileName.length == 2)
+                gallery.setImage(fileName[0], fileName[1]);
         }
         galleryRepository.save(gallery);
     }
@@ -93,6 +94,14 @@ public class GalleryServiceImpl implements GalleryService{
     @Override
     public boolean isExistByTitle(String title) {
         return galleryRepository.existsByTitle(title);
+    }
+
+    @Override
+    public void setGalleryModifiedDate(String id, LocalDateTime localDateTime) {
+        Gallery gallery = galleryRepository.findById(id).orElseThrow();
+        gallery.setLastModifiedDate(localDateTime);
+        log.info(localDateTime);
+        galleryRepository.save(gallery);
     }
 
     //@Override

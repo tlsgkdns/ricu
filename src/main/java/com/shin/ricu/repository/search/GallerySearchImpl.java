@@ -35,7 +35,7 @@ public class GallerySearchImpl extends QuerydslRepositorySupport implements Gall
                 gallery.galleryID,
                 gallery.title,
                 gallery.manager.memberID.as("managerMemberID"),
-                gallery.regDate
+                gallery.lastModifiedDate
         ));
         List<GalleryListAllDTO> list = dtoQuery.fetch();
         for(int i = 0; i < list.size(); i++)

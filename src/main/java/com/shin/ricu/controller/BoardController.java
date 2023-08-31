@@ -36,13 +36,16 @@ public class BoardController {
         return galleryService.getGalleryDTO(id);
     }
     @GetMapping("/list")
-    public void boardList(PageRequestDTO pageRequestDTO, Model model, @RequestParam String id)
+    public void boardList(PageRequestDTO pageRequestDTO, Model model, @RequestParam String id, String mode)
     {
         log.info(pageRequestDTO);
-        PageResponseDTO<BoardDTOForMembers> responseDTO = boardService.getBoardListWithGallery(pageRequestDTO, id
-                , pageRequestDTO.getType(), pageRequestDTO.getKeyword());
+        if(mode == null) mode = "ALL";
+        PageResponseDTO<BoardDTOForMembers> responseDTO;
+        responseDTO = boardService.getBoardListWithGallery(pageRequestDTO, id, pageRequestDTO.getType()
+                , pageRequestDTO.getKeyword(), mode);
         log.info(responseDTO);
         model.addAttribute("responseDTO", responseDTO);
+        model.addAttribute("mode", mode);
     }
     @GetMapping("/write")
     public void write(Model model, @RequestParam String id,
@@ -65,22 +68,25 @@ public class BoardController {
         }
         log.info(boardDTOForWriter);
         Long bno = boardService.writeBoard(boardDTOForWriter);
+        galleryService.setGalleryModifiedDate(boardDTOForWriter.getGalleryID(), boardService.readBoard(bno).getRegDate());
         redirectAttributes.addAttribute("id", boardDTOForWriter.getGalleryID());
         return "redirect:/gallery/board/list";
     }
 
     @GetMapping("/read")
-    public void readBoard(Model model, Long bno, PageRequestDTO pageRequestDTO
+    public void readBoard(Model model, Long bno, PageRequestDTO pageRequestDTO, String mode
             ,@AuthenticationPrincipal MemberSecurityDTO memberSecurityDTO)
     {
+        if(mode == null) mode = "ALL";
         BoardDTOForMembers boardDTOForMembers = boardService.readBoard(bno);
         if(memberSecurityDTO == null || !memberSecurityDTO.getNickname().equals(boardDTOForMembers.getWriter()))
             boardService.addView(bno);
         log.info(boardDTOForMembers);
         PageResponseDTO<BoardDTOForMembers> responseDTO = boardService.getBoardListWithGallery(pageRequestDTO, boardDTOForMembers.getGalleryID()
-                , pageRequestDTO.getType(), pageRequestDTO.getKeyword());
+                , pageRequestDTO.getType(), pageRequestDTO.getKeyword(), mode);
         model.addAttribute("responseDTO", responseDTO);
         model.addAttribute("dto", boardDTOForMembers);
+        model.addAttribute("mode", mode);
         if(memberSecurityDTO != null) model.addAttribute("memberDTO", memberService.getMember(memberSecurityDTO.getMemberID()));
     }
 

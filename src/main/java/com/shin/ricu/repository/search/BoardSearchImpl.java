@@ -20,11 +20,12 @@ public class BoardSearchImpl extends QuerydslRepositorySupport implements BoardS
     public BoardSearchImpl() {super(Board.class);}
 
     @Transactional
-    public Page<BoardDTOForMembers> searchBoard(Pageable pageable, String galleryID, String types, String keyword)
+    public Page<BoardDTOForMembers> searchBoard(Pageable pageable, String galleryID, String types, String keyword, boolean popular)
     {
         QBoard board = QBoard.board;
         QComment comment = QComment.comment;
         QMember member = QMember.member;
+        QGallery gallery = QGallery.gallery;
         JPQLQuery<Board> query = from(board);
         query.leftJoin(comment).on(comment.board.eq(board));
         query.innerJoin(member).on(member.memberID.eq(board.writer.memberID));
@@ -45,6 +46,7 @@ public class BoardSearchImpl extends QuerydslRepositorySupport implements BoardS
                 query.where(booleanBuilder);
             }
         }
+        if(popular) query.where(board.likeMembers.size().castToNum(Long.class).gt(0));
 
         List<Board> list = query.fetch();
         log.info(list.size() + " is in Here!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! But, ");

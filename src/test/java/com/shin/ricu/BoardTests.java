@@ -154,7 +154,7 @@ public class BoardTests {
     public void testBoardSearch()
     {
         PageRequestDTO pageRequestDTO = new PageRequestDTO();
-        Page<BoardDTOForMembers> list = boardRepository.searchBoard(pageRequestDTO.getPageable("bno"), "winter", "", "");
+        Page<BoardDTOForMembers> list = boardRepository.searchBoard(pageRequestDTO.getPageable("bno"), "winter", "", "", false);
         List<BoardDTOForMembers> boardList = list.getContent().stream().toList();
         log.info(boardList.size() + " is Here!!!!!!!!!!!!!!!!!!!!!!");
         for(int i=0; i < boardList.size(); i++) log.info(boardList.get(i));

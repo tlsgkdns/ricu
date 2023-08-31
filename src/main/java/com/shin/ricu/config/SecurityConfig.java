@@ -57,7 +57,7 @@ public class SecurityConfig {
                         })).logoutSuccessHandler(((request, response, authentication) -> {
                             response.sendRedirect("/member/login");
                         }))
-                        .deleteCookies("remeber-me"));
+                        .deleteCookies("remember-me"));
         return http.build();
     }
 

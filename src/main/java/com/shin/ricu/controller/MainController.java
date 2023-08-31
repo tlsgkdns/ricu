@@ -26,7 +26,7 @@ public class MainController {
     public void hello(Model model, @RequestParam String id, PageRequestDTO pageRequestDTO)
     {
         PageResponseDTO<BoardDTOForMembers> responseDTO = boardService.getBoardListWithGallery(pageRequestDTO, id
-                , pageRequestDTO.getType(), pageRequestDTO.getKeyword());
+                , pageRequestDTO.getType(), pageRequestDTO.getKeyword(), "MODE");
         model.addAttribute("responseDTO", responseDTO);
         model.addAttribute("galleryDTO", galleryService.getGalleryDTO(id));
     }

@@ -6,5 +6,5 @@ import org.springframework.data.domain.Pageable;
 
 public interface BoardSearch {
 
-    public Page<BoardDTOForMembers> searchBoard(Pageable pageable, String galleryID, String types, String keyword);
+    public Page<BoardDTOForMembers> searchBoard(Pageable pageable, String galleryID, String types, String keyword, boolean popular);
 }

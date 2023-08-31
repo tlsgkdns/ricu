@@ -5,6 +5,8 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDateTime;
+
 @Data
 @AllArgsConstructor
 @Builder
@@ -17,4 +19,5 @@ public class GalleryDTO
     private String managerNickname;
     private String explanation;
     private String galleryImageName;
+    private LocalDateTime lastModifiedDate;
 }

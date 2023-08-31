@@ -9,7 +9,8 @@ public interface BoardService {
 
     public Long writeBoard(BoardDTOForWriter boardDTOForMembers);
 
-    public PageResponseDTO<BoardDTOForMembers> getBoardListWithGallery(PageRequestDTO pageRequestDTO, String galleryID, String types, String keyword);
+    public PageResponseDTO<BoardDTOForMembers> getBoardListWithGallery(PageRequestDTO pageRequestDTO
+            , String galleryID, String types, String keyword, String mode);
 
     public BoardDTOForMembers readBoard(Long bno);
     public void removeBoard(Long bno);
