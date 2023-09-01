@@ -77,6 +77,7 @@ public class GalleryServiceImpl implements GalleryService{
         log.info(galleryDTO);
         Gallery gallery = galleryRepository.findById(galleryDTO.getGalleryID()).orElseThrow();
         gallery.changeExplanation(galleryDTO.getExplanation());
+        gallery.setPopularThreshold(galleryDTO.getPopularThreshold());
         if(galleryDTO.getGalleryImageName() != null)
         {
             String[] fileName = galleryDTO.getGalleryImageName().split("_");

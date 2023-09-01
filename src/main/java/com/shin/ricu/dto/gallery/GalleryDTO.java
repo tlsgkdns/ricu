@@ -19,5 +19,6 @@ public class GalleryDTO
     private String managerNickname;
     private String explanation;
     private String galleryImageName;
+    private Long popularThreshold;
     private LocalDateTime lastModifiedDate;
 }

@@ -53,4 +53,8 @@ public class Gallery extends BaseEntity{
         this.lastModifiedDate = lastModifiedDate;
     }
 
+    public void setPopularThreshold(Long threshold)
+    {
+        popularThreshold = threshold;
+    }
 }

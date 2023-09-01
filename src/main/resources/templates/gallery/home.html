@@ -58,7 +58,6 @@
                                         <button type="submit" sec:authorize="isAuthenticated()" th:if="${#authentication.principal.memberID == dto.managerMemberID}"
                                                 class="btn btn-sm btn-outline-secondary">Edit</button>
                                     </form>
-
                                 </div>
                                 <small class="text-body-secondary">Last Updated: <span>[[${#temporals.format(dto.lastModifiedDate, 'yyyy-MM-dd')}]]</span></small>
                             </div>

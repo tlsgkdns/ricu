@@ -46,7 +46,8 @@ public class BoardSearchImpl extends QuerydslRepositorySupport implements BoardS
                 query.where(booleanBuilder);
             }
         }
-        if(popular) query.where(board.likeMembers.size().castToNum(Long.class).gt(0));
+
+        if(popular) query.where(board.likeMembers.size().castToNum(Long.class).goe(gallery.popularThreshold));
 
         List<Board> list = query.fetch();
         log.info(list.size() + " is in Here!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! But, ");
