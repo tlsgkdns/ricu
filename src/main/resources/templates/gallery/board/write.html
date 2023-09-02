@@ -27,12 +27,10 @@
               <span class="input-group-text">Title</span>
               <input type="text" name="title" class="form-control" placeholder="Title">
             </div>
-
             <div class="input-group mb-3">
               <span class="input-group-text">Content</span>
               <textarea class="form-control col-sm-5" rows="5" name="content"></textarea>
             </div>
-
             <div class="input-group mb-3">
               <span class="input-group-text">Writer</span>
               <input type="hidden" name="writer" th:value="${member.memberID}">
@@ -55,13 +53,14 @@
 
 <script layout:fragment="script" th:inline="javascript">
   const errors = [[${errors}]]
-  console.log(errors)
 
-  let errorMsg = ''
   if(errors)
   {
+    let errorMsg = ''
     for(let i=0; i < errors.length; i++)
-      errorMsg += `${errors[i].field} is ${errors[i].code}\n`
+    {
+      errorMsg += `${errors[i].defaultMessage}\n`
+    }
     alert(errorMsg)
   }
 </script>

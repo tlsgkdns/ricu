@@ -45,7 +45,7 @@ public class BoardRestController {
     @GetMapping("/{bno}")
     public BoardDTOForMembers readBoard(@PathVariable Long bno){return boardService.readBoard(bno);}
 
-    @GetMapping("/galleryID/{galleryID}/writer/{writer}")
+    @GetMapping("/galleryID/{galleryID}/{writer}")
     public PageResponseDTO<BoardDTOForMembers> getBoardListWithWriter(@PathVariable String galleryID
             , @PathVariable String writer, PageRequestDTO pageRequestDTO)
     {

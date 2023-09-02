@@ -109,18 +109,17 @@ public class BoardController {
     }
 
     @PostMapping("/modify")
-    public String modify(PageRequestDTO pageRequestDTO,
-                         @Valid BoardDTOForWriter boardDTOForWriter, BindingResult bindingResult,
+    public String modify(@Valid BoardDTOForWriter boardDTOForWriter, BindingResult bindingResult,
                          RedirectAttributes redirectAttributes)
     {
         log.info("board modify post........." + boardDTOForWriter);
         if(bindingResult.hasErrors())
         {
             log.info("has error.............");
-            String link = pageRequestDTO.getLink();
             redirectAttributes.addFlashAttribute("errors", bindingResult.getAllErrors());
             redirectAttributes.addAttribute("bno", boardDTOForWriter.getBno());
-            return "redirect:/gallery/board/modify?" + link;
+            redirectAttributes.addAttribute("id", boardDTOForWriter.getGalleryID());
+            return "redirect:/gallery/board/modify";
         }
         boardService.modifyBoard(boardDTOForWriter);
         redirectAttributes.addFlashAttribute("result", "modified");

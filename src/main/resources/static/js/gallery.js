@@ -1,10 +1,10 @@
-async function isGalleryExistByURL(urlname)
+async function isAvailableURL(urlname)
 {
     const result = await axios.get(`/galleryRest/urlname/${urlname}`)
     return result.data
 }
 
-async function isGalleryExistByTitle(title)
+async function isAvailableTitle(title)
 {
     const result = await axios.get(`/galleryRest/title/${title}`)
     return result.data

@@ -107,7 +107,7 @@
 </div>
 <script layout:fragment="script" th:inline="javascript">
 
-  const error = [[${error}]]
+  const errors = [[${errors}]]
 
   let nicknameChecked = true
   document.querySelector("input[name='nickname']").addEventListener("change", function (e){
@@ -202,7 +202,7 @@
     e.stopPropagation()
     if(!nicknameChecked)
     {
-      alert("Please Check Unique Nickname")
+      alert("Please Use Unique Nickname")
       return
     }
     const target = document.querySelector(".uploadHidden")

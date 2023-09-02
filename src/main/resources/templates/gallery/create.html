@@ -14,15 +14,15 @@
         <div class="card-header">Create Gallery</div>
         <div class="card-body">
             <form th:action="@{/gallery/create}" method="post" id="f1">
+                <small style="color:red" id="urlInfo"></small>
                 <div class="input-group mb-3">
                     <span class="input-group-text">UrlName</span>
                     <input type="text" class="form-control" name="galleryID" placeholder="urlName">
-                    <button type="button" class="btn btn-info urlUniqueCheckBtn">Unique Check</button>
                 </div>
+                <small style="color:red" id="titleInfo"></small>
                 <div class="input-group mb-3">
                     <span class="input-group-text">Title</span>
                     <input type="text" class="form-control" name="title" placeholder="Title">
-                    <button type="button" class="btn btn-info titleUniqueCheckBtn">Unique Check</button>
                 </div>
                 <div class="input-group mb-3">
                     <span class="input-group-text">Manager</span>
@@ -160,61 +160,42 @@
 
     let urlCheck = false
     let titleCheck = false
-    document.querySelector(".urlUniqueCheckBtn").addEventListener("click", function (e){
-        e.preventDefault()
-        e.stopPropagation()
-
+    document.querySelector('input[name="galleryID"]').addEventListener("keyup", function (e) {
         const urlname = document.getElementsByName('galleryID')[0].value
-        isGalleryExistByURL(urlname).then(
+        if(urlname.length == 0) return
+        isAvailableURL(urlname).then(
             result =>
             {
+                let info = ""
                 if(!result)
-                {
-                    urlCheck = true
-                    alert("You can Use This URL")
-                }
-                else
                 {
                     urlCheck = false
-                    alert("You can't use this URL, Please Change")
-                }
-            }
-        ).catch(e => alert("ERRRRRRRRRRRRRROR"))
-    })
-
-    document.querySelector(".titleUniqueCheckBtn").addEventListener("click", function (e){
-        e.preventDefault()
-        e.stopPropagation()
-
-        const title = document.getElementsByName('title')[0].value
-        console.log(title)
-        isGalleryExistByTitle(title).then(
-            result =>
-            {
-                if(!result)
-                {
-                    titleCheck = true
-                    alert("You can Use This Title")
+                    info = "You cannot Use this URL"
                 }
                 else
-                {
-                    titleCheck = false
-                    alert("You can't use this Title, Please Change")
-                }
+                    urlCheck = true
+                document.getElementById("urlInfo").innerHTML = info
             }
         )
-    })
-
-    document.querySelector('input[name="galleryID"]').addEventListener("change", function (e){
-        e.preventDefault()
-        e.stopPropagation()
-        urlCheck = false;
-    })
-    document.querySelector('input[name="title"]').addEventListener("change", function (e){
-        e.preventDefault()
-        e.stopPropagation()
-        titleCheck = false;
-    })
+    }, false)
+    document.querySelector('input[name="title"]').addEventListener("keyup", function (e) {
+        const title = document.getElementsByName('title')[0].value
+        if(title.length == 0) return
+        isAvailableTitle(title).then(
+            result =>
+            {
+                let info = ""
+                if(!result)
+                {
+                    titleCheck = false
+                    info = "You cannot Use this Title"
+                }
+                else
+                    titleCheck = true
+                document.getElementById("titleInfo").innerHTML = info
+            }
+        )
+    }, false)
 
     document.querySelector(".submitBtn").addEventListener("click", function (e){
         e.preventDefault()

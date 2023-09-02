@@ -50,21 +50,23 @@
   <script layout:fragment="script" th:inline="javascript">
     const formObj = document.querySelector("#f1")
 
+    const errors = [[${errors}]]
     const dto = [[${dto}]]
     const link = [[${pageRequestDTO.getLink()}]]
     const galleryID = [[${dto.galleryID}]]
+    if(errors)
+    {
+      let errorMsg = ''
+      for(let i=0; i < errors.length; i++)
+      {
+        errorMsg += `${errors[i].defaultMessage}\n`
+      }
+      alert(errorMsg)
+    }
     document.querySelector(".modBtn").addEventListener("click", function (e){
       e.preventDefault()
       e.stopPropagation()
 
-      formObj.submit()
-    }, false)
-
-    document.querySelector(".removeBtn").addEventListener("click", function (e){
-      e.preventDefault()
-      e.stopPropagation()
-      formObj.action = `/gallery/board/remove`
-      formObj.method = 'post'
       formObj.submit()
     }, false)
   </script>

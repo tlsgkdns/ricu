@@ -89,13 +89,15 @@ public class GalleryServiceImpl implements GalleryService{
     }
 
     @Override
-    public boolean isExistByURL(String url) {
-        return galleryRepository.existsById(url);
+    public boolean isAvailableURL(String url) {
+        if(url.length() < 3 || url.length() > 20 || !url.matches("[0-9|a-z|A-Z]*")) return false;
+        return !galleryRepository.existsById(url);
     }
 
     @Override
-    public boolean isExistByTitle(String title) {
-        return galleryRepository.existsByTitle(title);
+    public boolean isAvailableTitle(String title) {
+        if(title.length() < 3 || title.length() > 20 || !title.matches("[0-9|a-z|A-Z]*")) return false;
+        return !galleryRepository.existsByTitle(title);
     }
 
     @Override

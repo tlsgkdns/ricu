@@ -25,9 +25,9 @@ public interface GalleryService {
 
     public void editGalleryInfo(GalleryDTO galleryDTO);
 
-    public boolean isExistByURL(String url);
+    public boolean isAvailableURL(String url);
 
-    public boolean isExistByTitle(String title);
+    public boolean isAvailableTitle(String title);
 
     public void setGalleryModifiedDate(String id, LocalDateTime localDateTime);
 

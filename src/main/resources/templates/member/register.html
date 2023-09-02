@@ -93,14 +93,19 @@
 </body>
 <script layout:fragment="script" th:inline="javascript">
 
-    const error = [[${error}]]
+    const errors = [[${errors}]]
 
     let idChecked = false
     let nicknameChecked = false
     let passwordChecked = false
-    if(error)
+    if(errors)
     {
-        alert(error);
+        let errorMsg = ''
+        for(let i=0; i < errors.length; i++)
+        {
+            errorMsg += `${errors[i].defaultMessage}\n`
+        }
+        alert(errorMsg)
     }
     const uploadModal = new bootstrap.Modal(document.querySelector(".uploadModal"))
     document.querySelector(".setProfileImageBtn").addEventListener("click", function (e){
@@ -213,7 +218,6 @@
                     else info ="Password and PasswordCheck is Unmatched"
                 }
 
-
                 document.getElementById("passwordInfo").innerHTML = info
             }
         ).catch(e => alert("Error While Checking Password"))
@@ -237,6 +241,16 @@
         document.getElementById("f1").reset();
     }, false)
 
+    const errors = [[${errors}]]
+    if(errors)
+    {
+        let errorMsg = ''
+        for(let i=0; i < errors.length; i++)
+        {
+            errorMsg += `${errors[i].defaultMessage}\n`
+        }
+        alert(errorMsg)
+    }
     function memberValueCheck()
     {
         alert("Some Inputs are unavailable")

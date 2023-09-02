@@ -7,6 +7,7 @@ import com.shin.ricu.security.dto.MemberSecurityDTO;
 import com.shin.ricu.service.MemberService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -39,7 +40,7 @@ public class MemberController {
     }
 
     @PostMapping("/register")
-    public String joinMember(RedirectAttributes redirectAttributes, MemberDTO memberDTO)
+    public String joinMember(RedirectAttributes redirectAttributes, @Valid MemberDTO memberDTO)
     {
         try
         {

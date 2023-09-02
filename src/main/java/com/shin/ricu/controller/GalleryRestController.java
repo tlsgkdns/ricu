@@ -22,15 +22,15 @@ import org.springframework.web.bind.annotation.RestController;
 public class GalleryRestController {
     private final GalleryService galleryService;
     @GetMapping("/urlname/{urlname}")
-    public boolean isExistByID(@PathVariable String urlname)
+    public boolean isAvailableURL(@PathVariable String urlname)
     {
-        return galleryService.isExistByURL(urlname);
+        return galleryService.isAvailableURL(urlname);
     }
 
     @GetMapping("/title/{title}")
-    public boolean isExistByNickname(@PathVariable String title)
+    public boolean isAvailableTitle(@PathVariable String title)
     {
-        return galleryService.isExistByTitle(title);
+        return galleryService.isAvailableTitle(title);
     }
 
     @GetMapping("/galleryList/{keyword}")
