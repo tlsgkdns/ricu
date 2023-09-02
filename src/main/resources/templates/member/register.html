@@ -31,21 +31,22 @@
                 <div class="card mb-6">
                     <div class="card-body">
                         <div class="row">
+                            <small style="color:red" id="nicknameInfo"></small>
                             <div class="input-group mb-3">
                                 <span class="input-group-text">NickName</span>
                                 <input type="text" class="form-control" name="nickname" placeholder="Nickname">
-                                <button type="button" class="btn btn-info nicknameUniqueCheckBtn">Unique Check</button>
                             </div>
-                            &nbsp;
+                            <small style="color:red" id="idInfo"></small>
                             <div class="input-group mb-3">
                                 <span class="input-group-text">Member ID</span>
                                 <input type="text" class="form-control" name="memberID" placeholder="MemberID">
-                                <button type="button" class="btn btn-info memberIDUniqueCheckBtn">Unique Check</button>
                             </div>
-                            &nbsp;
+                            <small style="color:red" id="passwordInfo"></small>
                             <div class="input-group mb-3">
                                 <span class="input-group-text">Password</span>
-                                <input type="text" class="form-control" name="password" placeholder="Password">
+                                <input type="password" class="form-control" name="password" placeholder="Password">
+                                <span class="input-group-text">Password Check</span>
+                                <input type="password" class="form-control" name="passwordCheck" placeholder="Password">
                             </div>
                             &nbsp;
                             <div class="input-group mb-3">
@@ -96,6 +97,7 @@
 
     let idChecked = false
     let nicknameChecked = false
+    let passwordChecked = false
     if(error)
     {
         alert(error);
@@ -149,60 +151,77 @@
         profileImage.innerHTML = str
     }
 
-
-    document.querySelector(".nicknameUniqueCheckBtn").addEventListener("click", function (e){
+    document.querySelector('input[name="nickname"]').addEventListener("keyup", function (e){
         const nickname = document.getElementsByName('nickname')[0].value
         console.log(nickname)
-        isMemberExistByNickname(nickname).then(
-            result =>
-            {
-                if(!result)
+        if(nickname == null || nickname.length == 0) return;
+        isAvailableNickname(nickname).then(
+            result =>{
+                let info = ""
+                if(result == 0)
                 {
                     nicknameChecked = true
-                    alert("You can Use This NickName")
                 }
                 else
                 {
                     nicknameChecked = false
-                    alert("You can't use this NickName, Please Change")
+                    if(result < 0) info = "Nickname Must be longer than 3 and less than 20 and only contain alphabet and Number"
+                    else info = "This Nickname is Already in used"
                 }
+
+                document.getElementById("nicknameInfo").innerHTML = info
             }
-        ).catch(e => alert("ERRRRRRRRRRRRRROR"))
-    })
-    document.querySelector(".memberIDUniqueCheckBtn").addEventListener("click", function (e){
-        const id = document.getElementsByName('memberID')[0].value
-        console.log(id)
-        isMemberExistByID(id).then(
-            result =>
-            {
-                if(!result)
-                {
-                    idChecked = true
-                    alert("You can Use This ID")
-                }
-                else
-                {
-                    idChecked = false;
-                    alert("You can't use this ID, Please Change")
-                }
-            }
-        ).catch(e => alert("ERRRRRRRRRRRRRROR"))
+        ).catch(e => alert("Error while Checking Nickname"))
     })
 
-    document.querySelector('input[name="nickname"]').addEventListener("change", function (e){
-        e.preventDefault()
-        e.stopPropagation()
-        nicknameChecked = false;
+    document.querySelector('input[name="memberID"]').addEventListener("keyup", function (e){
+        const mid = document.getElementsByName('memberID')[0].value
+        console.log(mid)
+        if(mid == null || mid.length == 0) return;
+        isAvailableID(mid).then(
+            result =>{
+                let info = ""
+                if(result == 0) idChecked = true
+                else
+                {
+                    idChecked = false
+                    if(result < 0) info = "ID Must be longer than 3 and less than 20 and only contain alphabet and Number"
+                    else info ="This ID is Already in used"
+                }
+
+                document.getElementById("idInfo").innerHTML = info
+            }
+        ).catch(e => alert("Error while Checking ID"))
     })
-    document.querySelector('input[name="memberID"]').addEventListener("change", function (e){
-        e.preventDefault()
-        e.stopPropagation()
-        idChecked = false;
-    })
+
+    document.querySelector('input[name="password"]').addEventListener("keyup", checkPassword, false)
+    document.querySelector('input[name="passwordCheck"]').addEventListener("keyup", checkPassword, false)
+    function checkPassword()
+    {
+        console.log("Changing Password....")
+        const password = document.getElementsByName('password')[0].value
+        const passwordCheck = document.getElementsByName('passwordCheck')[0].value
+        if(password == null || password.length == 0 || passwordCheck.length == 0) return
+        isAvailablePassword(password, passwordCheck).then(
+            result =>{
+                let info = ""
+                if(result == 0) passwordChecked = true
+                else
+                {
+                    passwordChecked = false
+                    if(result < 0) info = "Password Must be longer than 3 and less than 16 and have to contain Alphabet and Number"
+                    else info ="Password and PasswordCheck is Unmatched"
+                }
+
+
+                document.getElementById("passwordInfo").innerHTML = info
+            }
+        ).catch(e => alert("Error While Checking Password"))
+    }
     document.querySelector(".submitBtn").addEventListener("click", function (e){
         e.preventDefault()
         e.stopPropagation()
-        if(!nicknameChecked || !idChecked)
+        if(!nicknameChecked || !idChecked || !passwordChecked)
         {
             alert("Please Check Your Values")
             return
@@ -217,5 +236,10 @@
         document.getElementById("f1").submit();
         document.getElementById("f1").reset();
     }, false)
+
+    function memberValueCheck()
+    {
+        alert("Some Inputs are unavailable")
+    }
 </script>
 </html>

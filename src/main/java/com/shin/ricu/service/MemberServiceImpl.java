@@ -49,13 +49,32 @@ public class MemberServiceImpl implements MemberService{
     }
 
     @Override
-    public boolean isExistByNickname(String nickname) {
-        return memberRepository.existsByNickname(nickname);
+    public int isAvailableNickname(String nickname)
+    {
+        if(nickname == null || nickname.length() < 3 || nickname.length() > 20 ||
+                    !nickname.matches("[0-9|a-z|A-Z]*")) return -1;
+        if(memberRepository.existsByNickname(nickname)) return 1;
+        return 0;
     }
 
     @Override
-    public boolean isExistByID(String memberID) {
-        return memberRepository.existsById(memberID);
+    public int isAvailableID(String memberID)
+    {
+        if(memberID == null || memberID.length() < 3 || memberID.length() >  20 ||
+                !memberID.matches("[0-9|a-z|A-Z]*")) return -1;
+        if(memberRepository.existsById(memberID)) return 1;
+        return 0;
+    }
+
+    public int isAvailablePassword(String password, String passwordCheck)
+    {
+        if(password == null || password.length() < 3 || password.length() > 16 ||
+                !password.matches(".*[0-9].*") || !password.matches(".*[a-zA-z].*") || !password.matches("^[a-zA-Z0-9]*"))
+            return -1;
+        log.info(password + " VS " + passwordCheck);
+        if(!password.equals(passwordCheck))
+            return 1;
+        return 0;
     }
 
     @Override

@@ -15,15 +15,21 @@ public class MemberRestController {
 
     private final MemberService memberService;
     @GetMapping("/memberID/{memberID}")
-    public boolean isExistByID(@PathVariable String memberID)
+    public int isAvailableID(@PathVariable String memberID)
     {
-        return memberService.isExistByID(memberID);
+        log.info(memberID + " is " + memberService.isAvailableID(memberID));
+        return memberService.isAvailableID(memberID);
     }
-
     @GetMapping("/nickname/{name}")
-    public boolean isExistByNickname(@PathVariable String name)
+    public int isAvailableNickname(@PathVariable String name)
     {
-        log.info(name + " is " + memberService.isExistByNickname(name));
-        return memberService.isExistByNickname(name);
+        log.info(name + " is " + memberService.isAvailableNickname(name));
+        return memberService.isAvailableNickname(name);
+    }
+    @GetMapping("/password/{password}/{passwordCheck}")
+    public int isPasswordAvailable(@PathVariable String password, @PathVariable String passwordCheck)
+    {
+        log.info(password + " is " + passwordCheck);
+        return memberService.isAvailablePassword(password, passwordCheck);
     }
 }

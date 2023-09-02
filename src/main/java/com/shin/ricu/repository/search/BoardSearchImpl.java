@@ -31,10 +31,11 @@ public class BoardSearchImpl extends QuerydslRepositorySupport implements BoardS
         query.innerJoin(member).on(member.memberID.eq(board.writer.memberID));
         query.where(board.gallery.galleryID.eq(galleryID));
         query.groupBy(board);
+        log.info("We have query: " + query.fetchCount() + " About: " + galleryID);
         if((types != null && types.length() > 0) && keyword != null)
         {
             BooleanBuilder booleanBuilder = new BooleanBuilder();
-            log.info(types + "is in HEREEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEE");
+            log.info(types + " is in HEREEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEE");
             for(int i = 0; i < types.length(); i++)
             {
                 log.info(types.charAt(i));
@@ -43,11 +44,15 @@ public class BoardSearchImpl extends QuerydslRepositorySupport implements BoardS
                     case 'w' -> booleanBuilder.or(board.writer.nickname.contains(keyword));
                     case 'c' -> booleanBuilder.or(board.content.contains(keyword));
                 }
-                query.where(booleanBuilder);
             }
+            query.where(booleanBuilder);
         }
 
-        if(popular) query.where(board.likeMembers.size().castToNum(Long.class).goe(gallery.popularThreshold));
+        if(popular)
+        {
+            log.info("Get popular Board.......");
+            query.where(board.likeMembers.size().castToNum(Long.class).goe(gallery.popularThreshold));
+        }
 
         List<Board> list = query.fetch();
         log.info(list.size() + " is in Here!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! But, ");

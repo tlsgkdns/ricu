@@ -10,8 +10,10 @@ public interface MemberService {
 
     public MemberDTO getMember(String memberID);
 
-    public boolean isExistByNickname(String nickname);
-    public boolean isExistByID(String memberID);
+    public int isAvailableNickname(String nickname);
+    public int isAvailableID(String memberID);
+
+    public int isAvailablePassword(String password, String passwordCheck);
 
     public void editMember(MemberDTO memberDTO);
 }

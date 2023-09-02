@@ -5,6 +5,7 @@ import com.querydsl.core.types.Projections;
 import com.querydsl.jpa.JPQLQuery;
 import com.shin.ricu.domain.Gallery;
 import com.shin.ricu.domain.QGallery;
+import com.shin.ricu.dto.gallery.AutoSearchGalleryDTO;
 import com.shin.ricu.dto.gallery.GalleryListAllDTO;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.data.domain.Page;
@@ -12,6 +13,7 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.support.QuerydslRepositorySupport;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Log4j2
@@ -46,6 +48,19 @@ public class GallerySearchImpl extends QuerydslRepositorySupport implements Gall
             log.info(list.get(i).getGalleryImageName());
         }
         log.info(list.size() + " is in NOW!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
+        return new PageImpl<>(list, pageable, dtoQuery.fetchCount());
+    }
+
+    @Override
+    public Page<AutoSearchGalleryDTO> searchGalleryForAuto(Pageable pageable, String keyword) {
+        QGallery gallery = QGallery.gallery;
+        JPQLQuery<Gallery> query = from(gallery);
+        List<AutoSearchGalleryDTO> list = new ArrayList<>();
+        if(keyword == null) return new PageImpl<>(list, pageable, 0);
+        query.where(gallery.title.contains(keyword));
+        getQuerydsl().applyPagination(pageable, query);
+        JPQLQuery<AutoSearchGalleryDTO> dtoQuery = query.select(Projections.bean(AutoSearchGalleryDTO.class, gallery.galleryID, gallery.title));
+        list = dtoQuery.fetch();
         return new PageImpl<>(list, pageable, dtoQuery.fetchCount());
     }
 }

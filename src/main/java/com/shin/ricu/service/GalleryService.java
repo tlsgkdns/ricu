@@ -1,6 +1,7 @@
 package com.shin.ricu.service;
 
 import com.shin.ricu.domain.Gallery;
+import com.shin.ricu.dto.gallery.AutoSearchGalleryDTO;
 import com.shin.ricu.dto.gallery.GalleryCreateDTO;
 import com.shin.ricu.dto.gallery.GalleryDTO;
 import com.shin.ricu.dto.gallery.GalleryListAllDTO;
@@ -29,4 +30,6 @@ public interface GalleryService {
     public boolean isExistByTitle(String title);
 
     public void setGalleryModifiedDate(String id, LocalDateTime localDateTime);
+
+    public PageResponseDTO<AutoSearchGalleryDTO> getAutoGalleryList(PageRequestDTO pageRequestDTO, String keyword);
 }

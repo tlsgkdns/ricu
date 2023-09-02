@@ -2,6 +2,7 @@ package com.shin.ricu.service;
 
 import com.shin.ricu.domain.Gallery;
 import com.shin.ricu.domain.image.GalleryImage;
+import com.shin.ricu.dto.gallery.AutoSearchGalleryDTO;
 import com.shin.ricu.dto.gallery.GalleryCreateDTO;
 import com.shin.ricu.dto.gallery.GalleryDTO;
 import com.shin.ricu.dto.gallery.GalleryListAllDTO;
@@ -103,6 +104,17 @@ public class GalleryServiceImpl implements GalleryService{
         gallery.setLastModifiedDate(localDateTime);
         log.info(localDateTime);
         galleryRepository.save(gallery);
+    }
+
+    @Override
+    public PageResponseDTO<AutoSearchGalleryDTO> getAutoGalleryList(PageRequestDTO pageRequestDTO, String keyword) {
+        Page<AutoSearchGalleryDTO> list = galleryRepository.searchGalleryForAuto(pageRequestDTO.getPageable(), keyword);
+
+        return PageResponseDTO.<AutoSearchGalleryDTO>withAll()
+                .dtoList(list.getContent())
+                .pageRequestDTO(pageRequestDTO)
+                .total((int)list.getTotalElements())
+                .build();
     }
 
     //@Override

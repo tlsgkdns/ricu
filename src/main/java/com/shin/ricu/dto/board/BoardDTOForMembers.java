@@ -1,6 +1,7 @@
 package com.shin.ricu.dto.board;
 
 import lombok.*;
+import org.springframework.format.annotation.DateTimeFormat;
 
 import java.time.LocalDateTime;
 
@@ -18,5 +19,6 @@ public class BoardDTOForMembers {
     private Long views;
     private Long likeCount;
     private Long commentCount;
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
     private LocalDateTime regDate;
 }
