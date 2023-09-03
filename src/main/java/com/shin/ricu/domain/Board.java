@@ -28,7 +28,7 @@ public class Board extends BaseEntity{
     private String title;
     @Column(length = 2000, nullable = false)
     private String content;
-    @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY)
     private Member writer;
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "gallery_id", referencedColumnName = "galleryID")

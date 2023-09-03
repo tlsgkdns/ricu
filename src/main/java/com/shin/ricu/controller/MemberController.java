@@ -3,6 +3,8 @@ package com.shin.ricu.controller;
 import com.shin.ricu.domain.Member;
 import com.shin.ricu.dto.MemberDTO;
 import com.shin.ricu.exception.MemberIDExistException;
+import com.shin.ricu.exception.MemberIDIsNotExistException;
+import com.shin.ricu.exception.MemberNicknameIsNotExistException;
 import com.shin.ricu.security.dto.MemberSecurityDTO;
 import com.shin.ricu.service.MemberService;
 import jakarta.servlet.http.HttpServletRequest;
@@ -24,21 +26,55 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 public class MemberController {
 
     private final MemberService memberService;
-    @GetMapping({"/info", "/edit"})
-    public String userInfo(Model model, @AuthenticationPrincipal MemberSecurityDTO memberSecurityDTO, HttpServletRequest request)
+    @GetMapping( "/info")
+    public String userInfo(Model model, String id, String nickname, @AuthenticationPrincipal MemberSecurityDTO memberSecurityDTO,
+            HttpServletRequest request, RedirectAttributes redirectAttributes)
     {
-        if(memberSecurityDTO == null) return "redirect:/member/login";
-        MemberDTO memberDTO = memberService.getMember(memberSecurityDTO.getMemberID());
-        model.addAttribute("memberDTO", memberDTO);
-        return request.getRequestURI();
+        if(id == null)
+        {
+            if(nickname == null && memberSecurityDTO != null) id = memberSecurityDTO.getMemberID();
+            else
+            {
+                try
+                {
+                    MemberDTO memberDTO = memberService.getMemberByNickname(nickname);
+                    model.addAttribute("memberDTO", memberDTO);
+                    return request.getRequestURI();
+                } catch (MemberNicknameIsNotExistException e)
+                {
+                    return setError(redirectAttributes, "Member is Not Exist");
+                }
+            }
+        }
+        try {
+            MemberDTO memberDTO = memberService.getMemberByID(id);
+            model.addAttribute("memberDTO", memberDTO);
+            return request.getRequestURI();
+        } catch (MemberIDIsNotExistException e)
+        {
+            return setError(redirectAttributes, "Member is Not Exist");
+        }
+    }
+    @GetMapping("/edit")
+    private String editMember(Model model, @AuthenticationPrincipal MemberSecurityDTO memberSecurityDTO
+            , RedirectAttributes redirectAttributes)
+    {
+        if(memberSecurityDTO == null) return setError(redirectAttributes,"You are not available this page");
+        try {
+            MemberDTO memberDTO = memberService.getMemberByID(memberSecurityDTO.getMemberID());
+            model.addAttribute("memberDTO", memberDTO);
+        } catch (MemberIDIsNotExistException e)
+        {
+            return setError(redirectAttributes, "Member is Not Exist");
+        }
+        return "/member/edit";
     }
 
-    @GetMapping("/register")
-    public void getRegister(Model model, @RequestParam(required = false)String error)
+    private String setError(RedirectAttributes redirectAttributes, String errorMsg)
     {
-        model.addAttribute("error", error);
+        redirectAttributes.addFlashAttribute("error", errorMsg);
+        return "redirect:/gallery/home";
     }
-
     @PostMapping("/register")
     public String joinMember(RedirectAttributes redirectAttributes, @Valid MemberDTO memberDTO)
     {

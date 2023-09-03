@@ -120,9 +120,10 @@
                     str += `<img src="https://mdbcdn.b-cdn.net/img/Photos/new-templates/bootstrap-chat/ava3.webp" alt="avatar"
                             class="rounded-circle img-fluid" style="width: 50px; height: 50px">`
                 }
-                str += `<span class="col-2 h3">${comm.writer}</span>
+                str += `<span class="col-2 h3"><a href="/member/info?nickname=${comm.writer}">${comm.writer}</a></span>
                     <span class="col-6 h2">${comm.commentText}</span>
-                    <span class="col-3"></span>`
+                    <span class="col-3">${comm.regDate[0]}-${comm.regDate[1]}-${comm.regDate[2]}&nbsp;
+                        ${comm.regDate[3]}:${comm.regDate[4]}:${comm.regDate[5]}</span>`
                 if(userAuth != null && `${comm.writer}`== userAuth.nickname)
                     str += `<div>
                             <button type="button" class="btn btn-danger"

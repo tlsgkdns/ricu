@@ -14,6 +14,7 @@ public class CommentDTO {
     private Long bno;
     private String commentText;
     private String writer;
+    private String writerID;
     private String profileImageName;
     private LocalDateTime regDate;
 }

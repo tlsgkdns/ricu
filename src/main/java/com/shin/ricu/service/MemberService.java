@@ -1,15 +1,16 @@
 package com.shin.ricu.service;
 
-import com.shin.ricu.domain.Member;
 import com.shin.ricu.dto.MemberDTO;
 import com.shin.ricu.exception.MemberIDExistException;
-import com.shin.ricu.security.dto.MemberSecurityDTO;
+import com.shin.ricu.exception.MemberIDIsNotExistException;
+import com.shin.ricu.exception.MemberNicknameIsNotExistException;
 
 public interface MemberService {
     public String joinMember(MemberDTO memberDTO) throws MemberIDExistException;
 
-    public MemberDTO getMember(String memberID);
+    public MemberDTO getMemberByID(String memberID) throws MemberIDIsNotExistException;
 
+    public MemberDTO getMemberByNickname(String nickname) throws MemberNicknameIsNotExistException;
     public int isAvailableNickname(String nickname);
     public int isAvailableID(String memberID);
 

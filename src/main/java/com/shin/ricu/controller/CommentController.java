@@ -45,7 +45,6 @@ public class CommentController {
         PageResponseDTO<CommentDTO> responseDTO = commentService.getCommentListByBoard(bno, pageRequestDTO);
         return responseDTO;
     }
-
     @GetMapping("/{rno}")
     public CommentDTO getCommentDTO(@PathVariable("rno") Long commentID)
     {

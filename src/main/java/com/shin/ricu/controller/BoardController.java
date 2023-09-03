@@ -5,6 +5,7 @@ import com.shin.ricu.dto.board.BoardDTOForWriter;
 import com.shin.ricu.dto.gallery.GalleryDTO;
 import com.shin.ricu.dto.page.PageRequestDTO;
 import com.shin.ricu.dto.page.PageResponseDTO;
+import com.shin.ricu.exception.MemberIDIsNotExistException;
 import com.shin.ricu.security.dto.MemberSecurityDTO;
 import com.shin.ricu.service.BoardService;
 import com.shin.ricu.service.GalleryService;
@@ -12,6 +13,7 @@ import com.shin.ricu.service.MemberService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -75,7 +77,7 @@ public class BoardController {
 
     @GetMapping("/read")
     public void readBoard(Model model, Long bno, PageRequestDTO pageRequestDTO, String mode
-            ,@AuthenticationPrincipal MemberSecurityDTO memberSecurityDTO)
+            ,@AuthenticationPrincipal MemberSecurityDTO memberSecurityDTO, RedirectAttributes redirectAttributes)
     {
         if(mode == null) mode = "ALL";
         BoardDTOForMembers boardDTOForMembers = boardService.readBoard(bno);
@@ -87,16 +89,34 @@ public class BoardController {
         model.addAttribute("responseDTO", responseDTO);
         model.addAttribute("dto", boardDTOForMembers);
         model.addAttribute("mode", mode);
-        if(memberSecurityDTO != null) model.addAttribute("memberDTO", memberService.getMember(memberSecurityDTO.getMemberID()));
+        if(memberSecurityDTO != null)
+        {
+            try
+            {
+                model.addAttribute("memberDTO", memberService.getMemberByID(memberSecurityDTO.getMemberID()));
+            } catch (MemberIDIsNotExistException e)
+            {
+                redirectAttributes.addFlashAttribute("error", "Member is Not Exist");
+            }
+        }
+
     }
 
     @GetMapping("/modify")
-    public void modifyBoard(Model model, Long bno, PageRequestDTO pageRequestDTO)
+    public String modifyBoard(@RequestParam String id, Model model, Long bno, RedirectAttributes redirectAttributes
+            ,@AuthenticationPrincipal MemberSecurityDTO memberSecurityDTO)
     {
         BoardDTOForWriter boardDTO = boardService.readBoardForModify(bno);
-        log.info(boardDTO);
+        if(!memberSecurityDTO.getNickname().equals(boardDTO.getWriter()))
+        {
+            redirectAttributes.addAttribute("id", id);
+            redirectAttributes.addAttribute("bno", bno);
+            return "redirect:/gallery/board/read";
+        }
         model.addAttribute("dto", boardDTO);
+        log.info(boardDTO);
         model.addAttribute("galleryDTO", galleryService.getGalleryDTO(boardDTO.getGalleryID()));
+        return "/gallery/board/modify";
     }
     @PostMapping("/remove")
     public String remove(@RequestParam String id, Long bno, RedirectAttributes redirectAttributes)

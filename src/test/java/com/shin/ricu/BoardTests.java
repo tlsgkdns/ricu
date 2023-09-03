@@ -1,13 +1,23 @@
 package com.shin.ricu;
 
+import com.shin.ricu.domain.Member;
 import com.shin.ricu.dto.CommentDTO;
+import com.shin.ricu.dto.MemberDTO;
 import com.shin.ricu.dto.board.BoardDTOForMembers;
+import com.shin.ricu.dto.board.BoardDTOForWriter;
+import com.shin.ricu.dto.gallery.GalleryCreateDTO;
 import com.shin.ricu.dto.page.PageRequestDTO;
+import com.shin.ricu.exception.GalleryIDExistException;
+import com.shin.ricu.exception.MemberIDExistException;
 import com.shin.ricu.repository.BoardRepository;
 import com.shin.ricu.repository.GalleryRepository;
 import com.shin.ricu.repository.MemberRepository;
 import com.shin.ricu.service.BoardService;
+import com.shin.ricu.service.GalleryService;
+import com.shin.ricu.service.MemberService;
 import lombok.extern.log4j.Log4j2;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -27,6 +37,10 @@ public class BoardTests {
     MemberRepository memberRepository;
     @Autowired
     BoardService boardService;
+    @Autowired
+    MemberService memberService;
+    @Autowired
+    GalleryService galleryService;
     /*@BeforeEach
     public void insertData()
     {
@@ -150,6 +164,46 @@ public class BoardTests {
             boardRepository.save(board);
         }
     }*/
+
+    @BeforeEach
+    public void init() throws GalleryIDExistException, MemberIDExistException
+    {
+        boardRepository.deleteAll();
+        galleryRepository.deleteAll();
+        memberRepository.deleteAll();
+        MemberDTO memberDTO1 = MemberDTO.builder()
+                .memberID("aaa")
+                .email("aaa@naver.com")
+                .password("aaa")
+                .nickname("aaa")
+                .build();
+        MemberDTO memberDTO2 = MemberDTO.builder()
+                .memberID("bbb")
+                .email("bbb@naver.com")
+                .password("bbb")
+                .nickname("bbb")
+                .build();
+        memberService.joinMember(memberDTO1);
+        memberService.joinMember(memberDTO2);
+        String gid = "autumn", gtitle = "fall";
+        GalleryCreateDTO galleryCreateDTO = GalleryCreateDTO.builder()
+                .galleryID(gid)
+                .title(gtitle)
+                .manager("aaa")
+                .explanation("This is Junit Test HELLO!")
+                .build();
+        galleryService.createGallery(galleryCreateDTO);
+        for(int i = 0; i < 1001; i++)
+        {
+            BoardDTOForWriter boardDTOForWriter = BoardDTOForWriter.builder()
+                    .writer((i % 3 == 0) ? "bbb" : "aaa")
+                    .title("I am Board " + i)
+                    .content("Hello This is Board " + i + "\nNice to Meet You!")
+                    .galleryID(gid)
+                    .build();
+            boardService.writeBoard(boardDTOForWriter);
+        }
+    }
     @Test
     public void testBoardSearch()
     {
@@ -175,6 +229,12 @@ public class BoardTests {
                 .build();
 
         log.info("This is Comment " + comment);
+    }
+
+    @Test
+    public void load()
+    {
+
     }
 
 }

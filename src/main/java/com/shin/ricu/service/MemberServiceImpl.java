@@ -4,14 +4,16 @@ import com.shin.ricu.domain.Member;
 import com.shin.ricu.domain.MemberRole;
 import com.shin.ricu.dto.MemberDTO;
 import com.shin.ricu.exception.MemberIDExistException;
+import com.shin.ricu.exception.MemberIDIsNotExistException;
+import com.shin.ricu.exception.MemberNicknameIsNotExistException;
 import com.shin.ricu.repository.MemberRepository;
-import com.shin.ricu.security.dto.MemberSecurityDTO;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.modelmapper.ModelMapper;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
+
+import java.util.Optional;
 
 @Log4j2
 @Service
@@ -42,9 +44,16 @@ public class MemberServiceImpl implements MemberService{
     }
 
     @Override
-    public MemberDTO getMember(String memberID) {
-        Member member = memberRepository.findById(memberID).orElseThrow();
-        if(member == null) return null;
+    public MemberDTO getMemberByID(String memberID) throws MemberIDIsNotExistException {
+        Member member = memberRepository.findById(memberID).orElseThrow(() -> new MemberIDIsNotExistException());
+        return entityToDTO(member);
+    }
+
+    @Override
+    public MemberDTO getMemberByNickname(String nickname) throws MemberNicknameIsNotExistException {
+
+        Member member = memberRepository.getMemberByNickName(nickname);
+        if(member == null) throw new MemberNicknameIsNotExistException();
         return entityToDTO(member);
     }
 

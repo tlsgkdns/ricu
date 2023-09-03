@@ -88,6 +88,12 @@
 </div>
 
 <script layout:fragment="script" th:inline="javascript">
+
+    const error = [[${error}]]
+    if(error)
+    {
+        alert(error)
+    }
     function printGalleries(galleryDTO)
     {
         let str = '';
