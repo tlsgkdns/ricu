@@ -42,7 +42,7 @@
         <div class="col-md-6 order-md-3">
             <h2 class="featurette-heading lh-0 my-5"><span class="text-body-secondary">Hello! This is Gallery</span> [[${galleryDTO.title}]] </h2>
             <h3 class="featurette-heading lh-0 my-5"><span class="text-body-secondary">Manager: </span>[[${galleryDTO.managerNickname}]] </h3>
-            <p class="lead">[[${galleryDTO.explanation}]]</p>
+            <p class="lead" th:each="line: ${#strings.listSplit(galleryDTO.explanation, newLineChar)}">[[${line}]]</p>
         </div>
         <div class="col-md-5 order-md-2">
             <img th:if="${galleryDTO.galleryImageName == null}"class="bd-placeholder-img bd-placeholder-img-lg featurette-image img-fluid mx-auto" width="300" height="300" xmlns="http://www.w3.org/2000/svg" role="img"
@@ -65,24 +65,6 @@
             <input type="hidden" th:name="id" th:value="${galleryDTO.galleryID}"/>
             <button type=submit class="btn btn-primary writeBtn" >Write Board</button>
         </form>
-    </div>
-    <div class ="modal" tabindex="-1">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title">Modal title</h5>
-                    <button type="button" class="btn-close"
-                            data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class ="modal-body">
-                    <p>Modal body text goes here.</p>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                    <button type="button" class="btn btn-primary">Save Changes</button>
-                </div>
-            </div>
-        </div>
     </div>
     <div class="modal uploadModal" tabindex="-1">
         <div class="modal-dialog">
@@ -110,7 +92,7 @@
     const modal = new bootstrap.Modal(document.querySelector(".modal"))
     if(result)
     {
-        modal.show()
+        alert("Succesfully Deleted Board")
     }
     if(document.querySelector(".editGalleryBtn") != null)
     {

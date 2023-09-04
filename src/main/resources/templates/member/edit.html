@@ -118,6 +118,11 @@
 
   document.querySelector(".nicknameUniqueCheckBtn").addEventListener("click",function (e){
     const nickname = document.getElementsByName('nickname')[0].value
+    const error = [[${error}]]
+    if(error)
+    {
+      alert(error);
+    }
     if(nickname === [[${memberDTO.nickname}]])
     {
       console.log("Same!")
@@ -144,10 +149,7 @@
     }
 
   })
-  if(error)
-  {
-    alert(error);
-  }
+
   const uploadModal = new bootstrap.Modal(document.querySelector(".uploadModal"))
   document.querySelector(".setProfileImageBtn").addEventListener("click", function (e){
     e.preventDefault()

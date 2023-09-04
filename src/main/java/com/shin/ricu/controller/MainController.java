@@ -15,26 +15,14 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 @Controller
-@RequestMapping("/main")
+@RequestMapping("/")
 @RequiredArgsConstructor
 @Log4j2
 public class MainController {
-
-    private final GalleryService galleryService;
-    private final BoardService boardService;
-    @GetMapping("/hello")
-    public void hello(Model model, @RequestParam String id, PageRequestDTO pageRequestDTO)
+    @GetMapping("/")
+    public String indexing()
     {
-        PageResponseDTO<BoardDTOForMembers> responseDTO = boardService.getBoardListWithGallery(pageRequestDTO, id
-                , pageRequestDTO.getType(), pageRequestDTO.getKeyword(), "MODE");
-        model.addAttribute("responseDTO", responseDTO);
-        model.addAttribute("galleryDTO", galleryService.getGalleryDTO(id));
-    }
-
-    @GetMapping("/index")
-    public void indexing()
-    {
-
+        return "redirect:/gallery/home";
     }
 
 }

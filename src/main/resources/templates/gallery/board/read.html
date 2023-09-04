@@ -33,7 +33,9 @@
         </div>
         <div class="card-body">
             <br>
-            [[${dto.content}]]
+            <div th:each="line: ${#strings.listSplit(dto.content, newLineChar)}">
+                [[${line}]]
+            </div>
             <br><br><br><br><br><br><br><br>
             <div class="offset-5">
                 <button class="btn btn-success likeBtn"><svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" fill="currentColor" class="bi bi-hand-thumbs-up my-1" viewBox="0 0 16 16">

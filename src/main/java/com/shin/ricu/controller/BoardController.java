@@ -48,6 +48,7 @@ public class BoardController {
         log.info(responseDTO);
         model.addAttribute("responseDTO", responseDTO);
         model.addAttribute("mode", mode);
+        model.addAttribute("newLineChar", "\n");
     }
     @GetMapping("/write")
     public void write(Model model, @RequestParam String id,
@@ -61,6 +62,7 @@ public class BoardController {
     {
         log.info("board POST register.........");
 
+        log.info("Content: " + boardDTOForWriter.getContent());
         if(bindingResult.hasErrors())
         {
             log.info("has error.............");
@@ -89,6 +91,7 @@ public class BoardController {
         model.addAttribute("responseDTO", responseDTO);
         model.addAttribute("dto", boardDTOForMembers);
         model.addAttribute("mode", mode);
+        model.addAttribute("newLineChar", "\n");
         if(memberSecurityDTO != null)
         {
             try

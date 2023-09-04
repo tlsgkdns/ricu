@@ -61,6 +61,8 @@ public class GallerySearchImpl extends QuerydslRepositorySupport implements Gall
         getQuerydsl().applyPagination(pageable, query);
         JPQLQuery<AutoSearchGalleryDTO> dtoQuery = query.select(Projections.bean(AutoSearchGalleryDTO.class, gallery.galleryID, gallery.title));
         list = dtoQuery.fetch();
+        log.info(keyword + " is In Auto here !!!!");
+        for(int i=0; i < list.size(); i++) log.info(list.get(i) + " " + " Contains " + keyword);
         return new PageImpl<>(list, pageable, dtoQuery.fetchCount());
     }
 }

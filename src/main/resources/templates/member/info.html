@@ -89,7 +89,7 @@
         </div>
         <div class="card-body">
             <div class="justify-content-center">
-                <input type="text" list="galleryAutoList" class="dataListInput" id="dinput"/>
+                <input type="text" list="galleryAutoList" class="dataListInput" id="dinput" autocomplete="off"/>
                 <datalist id="galleryAutoList">
 
                 </datalist>
@@ -151,6 +151,7 @@
     })
     dataListInput.addEventListener('input', (e) => {
         value = e.target.value;
+        if(value.length == 0) setGalleryAutoList('')
         if (eventSource === 'list') {
             showBoardList(value)
         }
@@ -164,8 +165,8 @@
             {
                 str += `<option label="${dto.title}" value="${dto.galleryID}"></option>`
             }
-            galleryAutoList.innerHTML = str;
         }
+        galleryAutoList.innerHTML = str;
     }
     document.getElementById("galleryAutoList").addEventListener("focus", function (e){
         console.log("It is Changed!")

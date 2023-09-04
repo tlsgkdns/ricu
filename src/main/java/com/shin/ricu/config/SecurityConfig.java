@@ -57,7 +57,9 @@ public class SecurityConfig {
                         })).logoutSuccessHandler(((request, response, authentication) -> {
                             response.sendRedirect("/member/login");
                         }))
-                        .deleteCookies("remember-me"));
+                        .deleteCookies("remember-me")).rememberMe(r -> r.key("rememberKey")
+                        .rememberMeParameter("remember-me")
+                        .tokenValiditySeconds(86400 * 14));
         return http.build();
     }
 

@@ -23,7 +23,7 @@
                     <input type="hidden" th:value="${galleryDTO.title}" name="title">
                     <div class="uploadHidden"></div>
                     Explanation:
-                    <textarea class="form-control col-sm-5" name="explanation" rows="3">[[${galleryDTO.explanation}]]</textarea>
+                    <textarea class="form-control col-sm-5" name="explanation" rows="3" style="white-space: pre-wrap">[[${galleryDTO.explanation}]]</textarea>
                     <span class="text-body-secondary">PopularThreshold:</span>
                     <select class="form-select-sm" name="popularThreshold">
                         <option th:value="${galleryDTO.popularThreshold}" th:text="${galleryDTO.popularThreshold}" selected hidden></option>
