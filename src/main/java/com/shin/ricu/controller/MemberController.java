@@ -75,6 +75,11 @@ public class MemberController {
         redirectAttributes.addFlashAttribute("error", errorMsg);
         return "redirect:/gallery/home";
     }
+    @GetMapping("/register")
+    public void getMemberRegisterForm()
+    {
+
+    }
     @PostMapping("/register")
     public String joinMember(RedirectAttributes redirectAttributes, @Valid MemberDTO memberDTO)
     {

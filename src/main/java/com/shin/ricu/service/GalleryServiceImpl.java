@@ -135,9 +135,9 @@ public class GalleryServiceImpl implements GalleryService{
                 .explanation(galleryCreateDTO.getExplanation())
                 .manager(memberRepository.getMemberByNickName(galleryCreateDTO.getManager()))
                 .build();
-        if(galleryCreateDTO.getGalleryImage() != null)
+        if(galleryCreateDTO.getGalleryImageName() != null)
         {
-            String[] arr = galleryCreateDTO.getGalleryImage().split("_");
+            String[] arr = galleryCreateDTO.getGalleryImageName().split("_");
             gallery.setImage(arr[0], arr[1]);
             log.info(gallery.getGalleryImage());
         }

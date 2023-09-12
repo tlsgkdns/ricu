@@ -118,32 +118,24 @@
         e.stopPropagation()
         uploadModal.hide()
     }, false)
-    document.querySelector(".uploadBtn").addEventListener("click", function (e){
-        const formObj = new FormData();
+    function getExtension(filename) {
+        const parts = filename.split('.');
+        return parts[parts.length - 1];
+    }
 
-        const fileInput = document.querySelector("input[name='file']")
-
-        console.log(fileInput.files)
-
-        const files = fileInput.files
-
-        for(let i=0; i < files.length; i++)
-        {
-            formObj.append("files", files[i]);
-            console.log(files[i] + " ADDED!")
+    function isImage(filename) {
+        const ext = getExtension(filename);
+        switch (ext.toLowerCase()) {
+            case 'jpg':
+            case 'gif':
+            case 'bmp':
+            case 'png':
+                return true;
         }
-        console.log("Upload Btn Clicked!")
-        uploadToServer(formObj).then(result => {
-            for(const uploadResult of result)
-            {
-                console.log("Show UpLoad!!!!")
-                showUploadFile(uploadResult)
-            }
-            uploadModal.hide()
-        }).catch(e => {
-            console.log("ERROR!")
-            uploadModal.hide()
-        })
+        return false;
+    }
+    document.querySelector(".uploadBtn").addEventListener("click", function (e){
+        uploadImage(document.querySelector("input[name='file']"), showUploadFile)
     })
     const profileImage = document.querySelector(".profileImage")
     function showUploadFile({uuid, fileName, link})
@@ -199,6 +191,7 @@
         ).catch(e => alert("Error while Checking ID"))
     })
 
+
     document.querySelector('input[name="password"]').addEventListener("keyup", checkPassword, false)
     document.querySelector('input[name="passwordCheck"]').addEventListener("keyup", checkPassword, false)
     function checkPassword()
@@ -230,27 +223,10 @@
             alert("Please Check Your Values")
             return
         }
-        const target = document.querySelector(".uploadHidden")
-        const uploadFile = profileImage.querySelector("img")
-        let str = ''
-        const imgLink = uploadFile.getAttribute("data-src")
-        console.log(imgLink)
-        if(imgLink != null) str += `<input type='hidden' name='profileImageName' value="${imgLink}">`
-        target.innerHTML = str;
-        document.getElementById("f1").submit();
-        document.getElementById("f1").reset();
+        submitUploadedImage(document.querySelector(".uploadHidden"), profileImage.querySelector("img"),
+            document.getElementById("f1"), "profileImageName")
     }, false)
 
-    const errors = [[${errors}]]
-    if(errors)
-    {
-        let errorMsg = ''
-        for(let i=0; i < errors.length; i++)
-        {
-            errorMsg += `${errors[i].defaultMessage}\n`
-        }
-        alert(errorMsg)
-    }
     function memberValueCheck()
     {
         alert("Some Inputs are unavailable")

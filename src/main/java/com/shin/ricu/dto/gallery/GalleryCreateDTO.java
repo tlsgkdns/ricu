@@ -19,7 +19,7 @@ public class GalleryCreateDTO
     private String manager;
     @NotBlank(message = "Title cannot be Empty")
     private String title;
-    private String galleryImage;
+    private String galleryImageName;
 
     public void setManager(String manager)
     {
