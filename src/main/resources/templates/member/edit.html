@@ -157,25 +157,23 @@
   document.querySelector(".closeUploadBtn").addEventListener("click", function (e){
     hideUploadModal(e, uploadModal)
   }, false)
-  let tmpFile = null
-
-  document.querySelector("input[name='file']").addEventListener("click", function (e){
-    tmpFile = document.querySelector("input[name='file']");
-  }, false)
+  let tmpFile = [[${memberDTO.profileImageName}]]
+  let originProfile = [[${memberDTO.profileImageName}]]
   document.querySelector(".uploadBtn").addEventListener("click", function (e){
     uploadImage(document.querySelector("input[name='file']"), showUploadFile)
   })
   const profileImage = document.querySelector(".profileImage")
   function showUploadFile({uuid, fileName, link})
   {
-    if(profileImage.querySelector("img").getAttribute("data-src") != null)
-      removeFileLinkToServer(profileImage.querySelector("img").getAttribute("data-src"))
     console.log(link + "We Have")
+    if(tmpFile != null && originProfile != tmpFile) removeFileLinkToServer(tmpFile)
     const str = `<img src="/view/${link}" data-src=${uuid+"_"+fileName} alt="avatar"
                    class="rounded-circle img-fluid" style="width: 150px;">`
+    tmpFile = uuid+"_"+fileName
     profileImage.innerHTML = str
   }
 
+  let submitting = false
   document.querySelector(".submitBtn").addEventListener("click", function (e){
     e.preventDefault()
     e.stopPropagation()
@@ -184,9 +182,17 @@
       alert("Please Use Unique Nickname")
       return
     }
+    submitting = true
+    if(tmpFile != originProfile) removeFileLinkToServer(originProfile)
     submitUploadedImage(document.querySelector(".uploadHidden"), profileImage.querySelector("img"),
             document.querySelector("#f1"), "profileImageName")
   }, false)
+
+  window.onbeforeunload = function ()
+  {
+    if(!submitting && tmpFile != null && tmpFile != originProfile)
+      removeFileLinkToServer(tmpFile)
+  }
 </script>
 </html>
 

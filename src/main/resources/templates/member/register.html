@@ -95,6 +95,7 @@
 
     const errors = [[${errors}]]
 
+    let tmpFile = null
     let idChecked = false
     let nicknameChecked = false
     let passwordChecked = false
@@ -140,11 +141,11 @@
     const profileImage = document.querySelector(".profileImage")
     function showUploadFile({uuid, fileName, link})
     {
-        if(profileImage.querySelector("img").getAttribute("data-src") != null)
-            removeFileToServer(profileImage.querySelector("img").getAttribute("data-src"))
-        console.log(link + "We Have")
+        console.log(link + " We Have")
+        if(tmpFile != null) removeFileLinkToServer(tmpFile)
         const str = `<img src="/view/${link}" alt="avatar" data-src="${uuid+"_"+fileName}"
                                  class="rounded-circle img-fluid profileImage" style="width: 150px;" >`
+        tmpFile = uuid+"_"+fileName
         profileImage.innerHTML = str
     }
 
@@ -215,6 +216,7 @@
             }
         ).catch(e => alert("Error While Checking Password"))
     }
+    let submitting = false
     document.querySelector(".submitBtn").addEventListener("click", function (e){
         e.preventDefault()
         e.stopPropagation()
@@ -223,13 +225,15 @@
             alert("Please Check Your Values")
             return
         }
+        submitting = true
         submitUploadedImage(document.querySelector(".uploadHidden"), profileImage.querySelector("img"),
             document.getElementById("f1"), "profileImageName")
     }, false)
 
-    function memberValueCheck()
+    window.onbeforeunload = function ()
     {
-        alert("Some Inputs are unavailable")
+        if(!submitting && tmpFile != null)
+            removeFileLinkToServer(tmpFile)
     }
 </script>
 </html>

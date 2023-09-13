@@ -103,7 +103,7 @@ public class MemberServiceImpl implements MemberService{
     private Member dtoToEntity(MemberDTO memberDTO)
     {
         Member member = modelMapper.map(memberDTO, Member.class);
-        if(memberDTO.getProfileImageName() != null)
+        if(memberDTO.getProfileImageName() != null && (!memberDTO.getProfileImageName().equals("null")))
         {
             log.info(memberDTO.getProfileImageName());
             String[] names = memberDTO.getProfileImageName().split("_");
