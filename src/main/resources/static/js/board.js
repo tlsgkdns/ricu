@@ -19,8 +19,8 @@ async function getBoard(bno)
     return result.data
 }
 
-async function getBoardList(page, writer, galleryID, size)
+async function getBoardList(page, writer, title, size)
 {
-    const result = await axios.get(`/boardRest/galleryID/${galleryID}/${writer}`, {params: {page, size}})
+    const result = await axios.get(`/boardRest/galleryID/${title}/${writer}`, {params: {page, size}})
     return result.data
 }

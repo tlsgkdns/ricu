@@ -89,9 +89,9 @@
         </div>
         <div class="card-body">
             <div class="justify-content-center">
+                Search Board with:
                 <input type="text" list="galleryAutoList" class="dataListInput" id="dinput" autocomplete="off"/>
                 <datalist id="galleryAutoList">
-
                 </datalist>
             </div>
 
@@ -127,6 +127,8 @@
 
     const galleryAutoList = document.getElementById("galleryAutoList")
     const dataListInput = document.querySelector(".dataListInput")
+    const searchGallery = [[${searchGallery}]]
+    const writer = [[${memberDTO.nickname}]]
     let galleryClicked = false
     let gid = ''
     dataListInput.addEventListener("keyup", function (e)
@@ -146,12 +148,18 @@
     let eventSource = null;
     let value = '';
 
+
     dataListInput.addEventListener("keydown", (e) =>{
         eventSource = e.key ? 'input' : 'list';
     })
+    if(searchGallery != null)
+    {
+        dataListInput.value = searchGallery
+        showBoardList(searchGallery)
+    }
     dataListInput.addEventListener('input', (e) => {
         value = e.target.value;
-        if(value.length == 0) setGalleryAutoList('')
+        if(!value) setGalleryAutoList('')
         if (eventSource === 'list') {
             showBoardList(value)
         }
@@ -163,7 +171,7 @@
         {
             for(const dto of dtoList)
             {
-                str += `<option label="${dto.title}" value="${dto.galleryID}"></option>`
+                str += `<option value="${dto.title}"></option>`
             }
         }
         galleryAutoList.innerHTML = str;
@@ -197,7 +205,6 @@
         boardPaging.innerHTML = pageStr
     }
 
-    const writer = [[${memberDTO.nickname}]]
     function printBoards(page, galleryID)
     {
         getBoardList(page, writer, galleryID, 10).then(

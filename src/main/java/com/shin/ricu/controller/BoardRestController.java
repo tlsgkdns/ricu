@@ -42,12 +42,13 @@ public class BoardRestController {
     @GetMapping("/{bno}")
     public BoardDTOForMembers readBoard(@PathVariable Long bno){return boardService.readBoard(bno);}
 
-    @GetMapping("/galleryID/{galleryID}/{writer}")
-    public PageResponseDTO<BoardDTOForMembers> getBoardListWithWriter(@PathVariable String galleryID
+    @GetMapping("/galleryID/{title}/{writer}")
+    public PageResponseDTO<BoardDTOForMembers> getBoardListWithWriter(@PathVariable String title
             , @PathVariable String writer, PageRequestDTO pageRequestDTO)
     {
-        log.info("GalleryID: " + galleryID + " Writer: " + writer + " PageRequest" + pageRequestDTO);
-        PageResponseDTO<BoardDTOForMembers> ret = boardService.getBoardListWithGallery(pageRequestDTO, galleryID, "w", writer, "ALL");
+        log.info("GalleryID: " + title + " Writer: " + writer + " PageRequest" + pageRequestDTO);
+        PageResponseDTO<BoardDTOForMembers> ret =
+                boardService.getBoardListWithGalleryTitle(pageRequestDTO, title, "w", writer, "ALL");
         log.info(ret);
         return ret;
     }

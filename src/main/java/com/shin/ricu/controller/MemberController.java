@@ -27,7 +27,8 @@ public class MemberController {
 
     private final MemberService memberService;
     @GetMapping( "/info")
-    public String userInfo(Model model, String id, String nickname, @AuthenticationPrincipal MemberSecurityDTO memberSecurityDTO,
+    public String userInfo(Model model, String id, String nickname, String searchGallery,
+                           @AuthenticationPrincipal MemberSecurityDTO memberSecurityDTO,
             HttpServletRequest request, RedirectAttributes redirectAttributes)
     {
         if(id == null)
@@ -39,7 +40,8 @@ public class MemberController {
                 {
                     MemberDTO memberDTO = memberService.getMemberByNickname(nickname);
                     model.addAttribute("memberDTO", memberDTO);
-                    return request.getRequestURI();
+                    model.addAttribute("searchGallery", searchGallery);
+                    return "member/info";
                 } catch (MemberNicknameIsNotExistException e)
                 {
                     return setError(redirectAttributes, "Member is Not Exist");

@@ -57,6 +57,13 @@ public class BoardServiceImpl implements BoardService{
                 .build();
     }
 
+    @Override
+    public PageResponseDTO<BoardDTOForMembers> getBoardListWithGalleryTitle(PageRequestDTO pageRequestDTO, String title, String types, String keyword, String mode)
+    {
+        return getBoardListWithGallery(pageRequestDTO, galleryRepository.getGalleryIDByTitle(title), types, keyword, mode);
+    }
+
+
     @Transactional
     @Override
     public BoardDTOForMembers readBoard(Long bno)

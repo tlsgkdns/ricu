@@ -9,4 +9,7 @@ public interface GalleryRepository extends JpaRepository<Gallery, String>, Galle
 
     @Query("select exists (select g from Gallery g where g.title = :title)")
     public boolean existsByTitle(String title);
+
+    @Query("select g.galleryID from Gallery g where g.title = :title")
+    public String getGalleryIDByTitle(String title);
 }

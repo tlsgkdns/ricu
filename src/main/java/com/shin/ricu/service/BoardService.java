@@ -11,6 +11,8 @@ public interface BoardService {
 
     public PageResponseDTO<BoardDTOForMembers> getBoardListWithGallery(PageRequestDTO pageRequestDTO
             , String galleryID, String types, String keyword, String mode);
+    public PageResponseDTO<BoardDTOForMembers> getBoardListWithGalleryTitle(PageRequestDTO pageRequestDTO
+            , String galleryID, String types, String keyword, String mode);
 
     public BoardDTOForMembers readBoard(Long bno);
     public void removeBoard(Long bno);

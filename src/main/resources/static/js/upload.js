@@ -29,10 +29,13 @@ async function removeFileLinkToServer(link)
 }
 function submitUploadedImage(target, uploadFile, submitForm, imageName)
 {
-    let str = ''
-    const imgLink = uploadFile.getAttribute("data-src")
-    str += `<input type='hidden' name=${imageName} value="${imgLink}">`
-    target.innerHTML = str;
+    if(uploadFile != null)
+    {
+        let str = ''
+        const imgLink = uploadFile.getAttribute("data-src")
+        str += `<input type='hidden' name=${imageName} value="${imgLink}">`
+        target.innerHTML = str;
+    }
     submitForm.submit();
     submitForm.reset();
 }
