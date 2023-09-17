@@ -7,6 +7,7 @@ import com.shin.ricu.exception.MemberIDIsNotExistException;
 import com.shin.ricu.exception.MemberNicknameIsNotExistException;
 import com.shin.ricu.security.dto.MemberSecurityDTO;
 import com.shin.ricu.service.MemberService;
+import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
@@ -83,7 +84,8 @@ public class MemberController {
 
     }
     @PostMapping("/register")
-    public String joinMember(RedirectAttributes redirectAttributes, @Valid MemberDTO memberDTO)
+    public String joinMember(HttpServletRequest request, RedirectAttributes redirectAttributes, @Valid MemberDTO memberDTO)
+            throws ServletException
     {
         try
         {
@@ -93,6 +95,7 @@ public class MemberController {
             redirectAttributes.addFlashAttribute("error", "Already Exist ID");
            return "redirect:/member/register";
         }
+        request.login(memberDTO.getMemberID(), memberDTO.getPassword());
         return "redirect:/gallery/home";
     }
 

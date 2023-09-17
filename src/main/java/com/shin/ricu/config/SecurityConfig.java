@@ -71,6 +71,7 @@ public class SecurityConfig {
     @Bean
     public AuthenticationFailureHandler loginFailureHandler()
     {
+        log.info("Login Failed....");
         return new LoginFailureHandler();
     }
 
