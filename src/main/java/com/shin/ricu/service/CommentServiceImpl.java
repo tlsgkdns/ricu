@@ -34,7 +34,11 @@ public class CommentServiceImpl implements CommentService {
         Long commentID = commentRepository.save(comment).getCommentID();
         return commentID;
     }
-
+    @Override
+    public CommentDTO readComment(Long commentID) {
+        Comment comment = commentRepository.findById(commentID).orElseThrow();
+        return modelMapper.map(comment, CommentDTO.class);
+    }
     @Override
     public void deleteAllComment() {
         commentRepository.deleteAll();
@@ -48,11 +52,7 @@ public class CommentServiceImpl implements CommentService {
         return commentID;
     }
 
-    @Override
-    public CommentDTO readComment(Long commentID) {
-        Comment comment = commentRepository.findById(commentID).orElseThrow();
-        return modelMapper.map(comment, CommentDTO.class);
-    }
+
 
     @Override
     public void removeComment(Long commentID) {

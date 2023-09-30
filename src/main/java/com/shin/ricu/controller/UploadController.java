@@ -38,8 +38,19 @@ public class UploadController {
             MultipartFile multipartFile = uploadFileDTO.getFiles();
             String originalName = multipartFile.getOriginalFilename();
             log.info(originalName);
+            String[] names = originalName.split("_");
+            if(names.length > 1)
+            {
+                String newName = "";
+                for(int i = 0; i < names.length; i++)
+                {
+                    newName += names[i];
+                    if(i != names.length - 1) newName += "-";
+                }
+                originalName = newName;
+            }
             String uuid = UUID.randomUUID().toString();
-            Path savePath = Paths.get(uploadPath, uuid+"_" + originalName);
+            Path savePath = Paths.get(uploadPath, uuid+ "_" + originalName);
             boolean image = false;
             try
             {

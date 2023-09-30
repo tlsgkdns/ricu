@@ -102,13 +102,11 @@
     </div>
   </div>
   <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
-  <script src="/js/upload.js"></script>
+  <script src="/js/uploadFile.js"></script>
   <script src="/js/member.js"></script>
 </div>
 <script layout:fragment="script" th:inline="javascript">
-
   const errors = [[${errors}]]
-
   let nicknameChecked = true
   document.querySelector("input[name='nickname']").addEventListener("change", function (e){
     e.stopPropagation()

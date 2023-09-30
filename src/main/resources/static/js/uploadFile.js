@@ -21,6 +21,7 @@ async function removeFileToServer(uuid, fileName)
     const response = await axios.delete(`/remove/${uuid}_${fileName}`)
     return response.data
 }
+
 async function removeFileLinkToServer(link)
 {
     console.log(link)

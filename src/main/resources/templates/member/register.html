@@ -87,7 +87,7 @@
         </div>
     </div>
     <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
-    <script src="/js/upload.js"></script>
+    <script src="/js/uploadFile.js"></script>
     <script src="/js/member.js"></script>
 </div>
 </body>
@@ -112,30 +112,15 @@
     document.querySelector(".setProfileImageBtn").addEventListener("click", function (e){
         e.preventDefault()
         e.stopPropagation()
-        uploadModal.show()
+        showUploadModal(e, uploadModal)
     }, false)
     document.querySelector(".closeUploadBtn").addEventListener("click", function (e){
         e.preventDefault()
         e.stopPropagation()
-        uploadModal.hide()
+        hideUploadModal(e, uploadModal)
     }, false)
-    function getExtension(filename) {
-        const parts = filename.split('.');
-        return parts[parts.length - 1];
-    }
-
-    function isImage(filename) {
-        const ext = getExtension(filename);
-        switch (ext.toLowerCase()) {
-            case 'jpg':
-            case 'gif':
-            case 'bmp':
-            case 'png':
-                return true;
-        }
-        return false;
-    }
     document.querySelector(".uploadBtn").addEventListener("click", function (e){
+        console.log("Uploading.....")
         uploadImage(document.querySelector("input[name='file']"), showUploadFile)
     })
     const profileImage = document.querySelector(".profileImage")
