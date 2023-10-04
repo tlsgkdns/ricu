@@ -38,7 +38,6 @@ public class Board extends BaseEntity{
     private Set<String> likeMembers = new HashSet<>();
     @Builder.Default
     private Long views = 0L;
-
     public void modifyBoard(String title, String content)
     {
         this.title = title;

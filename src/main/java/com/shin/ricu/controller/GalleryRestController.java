@@ -21,19 +21,19 @@ import org.springframework.web.bind.annotation.RestController;
 @RequiredArgsConstructor
 public class GalleryRestController {
     private final GalleryService galleryService;
-    @GetMapping("/urlname/{urlname}")
+    @GetMapping("/availableURLName/{urlname}")
     public boolean isAvailableURL(@PathVariable String urlname)
     {
         return galleryService.isAvailableURL(urlname);
     }
 
-    @GetMapping("/title/{title}")
+    @GetMapping("/availableTitle/{title}")
     public boolean isAvailableTitle(@PathVariable String title)
     {
         return galleryService.isAvailableTitle(title);
     }
 
-    @GetMapping("/galleryList/{keyword}")
+    @GetMapping("/galleryAutoList/{keyword}")
     public PageResponseDTO<AutoSearchGalleryDTO> searchGalleryForAuto(@PathVariable String keyword)
     {
         PageRequestDTO pageRequestDTO = new PageRequestDTO();
