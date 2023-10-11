@@ -55,6 +55,7 @@
 * Test: JUnit5
 * Database: MySQL(8.0.33)
 # 2. 베이스 프로젝트 화면 VS RICU 화면
+이 프로젝트는 "자바 웹 개발 워크북: 성장하는 개발자를 만드는 실무형 로드맵"을 베이스로 만들어졌습니다.
 ## 2.1 변경 없음
 ### 2.1.1 게시글 등록
 <br><img width=1000 height=400 src="https://github.com/tlsgkdns/ricu/assets/24753709/83d51982-593c-4679-b069-d8b38a1fc07e">
