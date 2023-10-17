@@ -9,7 +9,7 @@ async function addLike(bno)
 async function cancelLike(bno)
 {
     console.log("Cancel LIKE..")
-    const result = await axios.get(`/boardRest/cancelLike/${bno}`)
+    const result = await axios.delete(`/boardRest/like/${bno}`)
     return result.data
 }
 
@@ -21,6 +21,6 @@ async function getBoard(bno)
 
 async function getBoardList(page, writer, title, size)
 {
-    const result = await axios.get(`/boardRest/galleryID/${title}/${writer}`, {params: {page, size}})
+    const result = await axios.get(`/boardRest/gallery-id/${title}/${writer}`, {params: {page, size}})
     return result.data
 }

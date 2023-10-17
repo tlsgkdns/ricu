@@ -31,7 +31,7 @@ public class BoardRestController {
         return ret;
     }
 
-    @RequestMapping("/cancelLike/{bno}")
+    @DeleteMapping("/like/{bno}")
     public Long cancelLike(@AuthenticationPrincipal MemberSecurityDTO memberSecurityDTO, @PathVariable Long bno)
     {
         log.info("Canceling LIKE!");
@@ -42,7 +42,7 @@ public class BoardRestController {
     @GetMapping("/{bno}")
     public BoardDTOForMembers readBoard(@PathVariable Long bno){return boardService.readBoard(bno);}
 
-    @GetMapping("/galleryID/{title}/{writer}")
+    @GetMapping("/gallery-id/{title}/{writer}")
     public PageResponseDTO<BoardDTOForMembers> getBoardListWithWriter(@PathVariable String title
             , @PathVariable String writer, PageRequestDTO pageRequestDTO)
     {
